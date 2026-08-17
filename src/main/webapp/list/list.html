@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>アニメ検索 — ANIVERSE</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="../css/style.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav class="navbar navbar-expand-md navbar-custom py-3">
+  <div class="container">
+    <a class="navbar-brand brand" href="../index.html">ANI<span>VERSE</span></a>
+    <div class="d-flex align-items-center gap-2 order-md-3">
+      <button class="spec-toggle" id="specToggleBtn" onclick="toggleSpec()" title="画面に要件ID(例: ANI-001)を表示します">⌘ 仕様書オーバーレイ</button>
+      <a class="btn btn-outline-soft btn-sm" href="../login/login.html">ログイン</a>
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMain" style="filter:invert(1);">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+    <div class="collapse navbar-collapse order-md-2" id="navMain">
+      <ul class="navbar-nav mx-md-3 gap-1 mt-3 mt-md-0">
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="../index.html">ホーム</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom active" href="list.html">アニメ一覧</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="../recommend/recommend.html">おすすめ</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="../mypage/mypage.html">マイページ</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<section class="sub-hero">
+  <div class="container">
+    <h2 class="mb-0">アニメ検索</h2>
+  </div>
+</section>
+
+<section class="section container req-anchor">
+  <span class="req-id">ANI-002~006 · SYS-003</span>
+
+  <div class="surface p-3 p-md-4 mb-4">
+    <form id="filterForm" class="row g-2 align-items-end" method="get" action="list.html">
+      <div class="col-md-4">
+        <label class="form-label-custom">タイトル検索</label>
+        <input type="text" class="form-control form-control-custom" name="title" id="titleInput" placeholder="タイトルを入力">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label-custom">放送年</label>
+        <select class="form-select form-control-custom" name="year" id="yearSelect"><option value="">すべて</option></select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label-custom">並び替え</label>
+        <select class="form-select form-control-custom" name="sort" id="sortSelect">
+          <option value="score">評価順</option>
+          <option value="year">新着順</option>
+          <option value="title">タイトル順</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-accent w-100" type="submit">検索</button>
+      </div>
+      <input type="hidden" name="tag" id="tagHidden">
+    </form>
+    <div class="mt-3">
+      <span class="text-muted small me-2">タグ</span>
+      <span id="tagChips"></span>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <span class="text-muted small" id="resultCount"></span>
+  </div>
+  <div class="row g-3" id="listGrid"></div>
+  <nav class="mt-4" id="pagination"></nav>
+</section>
+
+<footer class="footer text-center req-anchor">
+  <span class="req-id" style="position:static; display:inline-block; margin-bottom:.5rem;">SYS-002</span>
+  <div>ANIVERSE — アニメおすすめサイト プロジェクト · JSP + Oracle + Bootstrap</div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="../js/anime-data.js"></script>
+<script>
+  // 로그인 전 상태이므로 찜 버튼 클릭 시 로그인 페이지로 이동 (FAV-001)
+  function onFavClick(id){ location.href = "../login/login.html"; }
+
+  const PAGE_SIZE = 8;
+  const params = new URLSearchParams(location.search);
+  const state = {
+    title: params.get("title") || "",
+    year: params.get("year") || "",
+    sort: params.get("sort") || "score",
+    tags: params.getAll("tag").length ? params.getAll("tag") : (params.get("tag") ? [params.get("tag")] : []),
+    page: parseInt(params.get("page") || "1", 10),
+  };
+
+  // 연도 옵션 채우기
+  const yearSelect = document.getElementById("yearSelect");
+  [...new Set(ANIME.map(a=>a.year))].sort((a,b)=>b-a).forEach(y=>{
+    const o = document.createElement("option");
+    o.value = y; o.textContent = y + "年";
+    if(String(y)===state.year) o.selected = true;
+    yearSelect.appendChild(o);
+  });
+  document.getElementById("titleInput").value = state.title;
+  document.getElementById("sortSelect").value = state.sort;
+  document.getElementById("sortSelect").querySelector(`option[value="${state.sort}"]`).selected = true;
+
+  // 태그 칩: 클릭하면 해당 태그만 선택해서 재조회 (다중 선택은 체크박스로 확장 가능)
+  document.getElementById("tagChips").innerHTML = ALL_TAGS.map(t=>{
+    const selected = state.tags.includes(t);
+    const newParams = new URLSearchParams(location.search);
+    newParams.delete("tag"); newParams.delete("page");
+    if(!selected) newParams.append("tag", t);
+    return `<a class="tag-chip ${selected?'selected':''}" href="list.html?${newParams.toString()}">#${t}</a>`;
+  }).join("");
+
+  // 필터링 + 정렬
+  let result = ANIME.filter(a=>{
+    if(state.title && !a.title.includes(state.title)) return false;
+    if(state.year && String(a.year)!==state.year) return false;
+    if(state.tags.length>0 && !state.tags.every(t=>a.tags.includes(t))) return false;
+    return true;
+  });
+  if(state.sort==="score") result.sort((a,b)=>b.score-a.score);
+  if(state.sort==="year") result.sort((a,b)=>b.year-a.year);
+  if(state.sort==="title") result.sort((a,b)=>a.title.localeCompare(b.title,'ja'));
+
+  const totalPages = Math.max(1, Math.ceil(result.length / PAGE_SIZE));
+  if(state.page > totalPages) state.page = totalPages;
+  const pageItems = result.slice((state.page-1)*PAGE_SIZE, state.page*PAGE_SIZE);
+
+  document.getElementById("resultCount").textContent = `全${result.length}件`;
+  document.getElementById("listGrid").innerHTML = pageItems.length
+    ? pageItems.map(a=>cardHTML(a, "../detail/detail.html", false)).join("")
+    : `<div class="col-12"><div class="empty-state">条件に合うアニメが見つかりません。<br><span class="small">検索語やタグ条件を変えてみてください。</span></div></div>`;
+
+  if(totalPages > 1){
+    const pageParams = new URLSearchParams(location.search);
+    let btns = "";
+    for(let p=1; p<=totalPages; p++){
+      pageParams.set("page", p);
+      btns += `<a class="btn btn-sm ${p===state.page?'btn-accent':'btn-outline-soft'} me-1" href="list.html?${pageParams.toString()}">${p}</a>`;
+    }
+    document.getElementById("pagination").innerHTML = `<div class="d-flex justify-content-center">${btns}</div>`;
+  }
+</script>
+</body>
+</html>

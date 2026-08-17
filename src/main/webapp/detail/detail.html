@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>作品詳細 — ANIVERSE</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="../css/style.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav class="navbar navbar-expand-md navbar-custom py-3">
+  <div class="container">
+    <a class="navbar-brand brand" href="../index.html">ANI<span>VERSE</span></a>
+    <div class="d-flex align-items-center gap-2 order-md-3">
+      <button class="spec-toggle" id="specToggleBtn" onclick="toggleSpec()" title="画面に要件ID(例: ANI-001)を表示します">⌘ 仕様書オーバーレイ</button>
+      <a class="btn btn-outline-soft btn-sm" href="../login/login.html">ログイン</a>
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMain" style="filter:invert(1);">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+    <div class="collapse navbar-collapse order-md-2" id="navMain">
+      <ul class="navbar-nav mx-md-3 gap-1 mt-3 mt-md-0">
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="../index.html">ホーム</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom active" href="../list/list.html">アニメ一覧</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="../recommend/recommend.html">おすすめ</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="../mypage/mypage.html">マイページ</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<section class="section container" id="detailContent">
+  <!-- JS로 채워집니다 -->
+</section>
+
+<footer class="footer text-center req-anchor">
+  <span class="req-id" style="position:static; display:inline-block; margin-bottom:.5rem;">SYS-002</span>
+  <div>ANIVERSE — アニメおすすめサイト プロジェクト · JSP + Oracle + Bootstrap</div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="../js/anime-data.js"></script>
+<script>
+  // 로그인 전 상태이므로 찜 버튼 클릭 시 로그인 페이지로 이동 (FAV-001, FAV-002)
+  function onFavClick(id){ location.href = "../login/login.html"; }
+
+  const params = new URLSearchParams(location.search);
+  const id = parseInt(params.get("id") || "1", 10);
+  const a = ANIME.find(x => x.id === id) || ANIME[0];
+
+  function similarTo(a){
+    return ANIME.filter(x => x.id!==a.id && x.tags.some(t=>a.tags.includes(t)))
+      .sort((x,y) => {
+        const overlap = z => z.tags.filter(t=>a.tags.includes(t)).length;
+        return overlap(y)-overlap(x) || y.score-x.score;
+      })
+      .slice(0,4);
+  }
+
+  document.getElementById("detailContent").innerHTML = `
+    <div class="req-anchor mb-3"><span class="req-id">ANI-007 · FAV-001 · FAV-002 · FAV-004</span></div>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div style="max-width:280px;">${posterHTML(a, {hideFav:true})}</div>
+      </div>
+      <div class="col-md-8">
+        <h2 class="mb-2">${a.title}</h2>
+        <div class="text-muted mb-3">${a.type} · ${a.season} · ${a.year}年 · 全${a.episodes}話 · 1話${a.duration} · ${a.status}</div>
+        <div class="mb-3">
+          <span class="mono" style="color:var(--accent-2); font-size:.9rem;">★ ${a.score.toFixed(1)}</span>
+          <span class="text-muted small ms-2">/ 10.0</span>
+        </div>
+        <div class="mb-4">
+          ${a.tags.map(t=>`<span class="tag-chip static">#${t}</span>`).join("")}
+        </div>
+        <a class="btn btn-outline-soft" href="../login/login.html">♡ お気に入りに追加</a>
+        <div class="small text-muted mt-2">ログイン後にお気に入り登録できます。</div>
+      </div>
+    </div>
+
+    <div class="mt-5 req-anchor">
+      <span class="req-id">REC-002</span>
+      <h5 class="mb-3">似たタグの他の作品</h5>
+      <div class="row g-3">
+        ${similarTo(a).map(x=>cardHTML(x, "detail.html", false)).join("") || '<div class="col-12 text-muted small">類似タグの作品がありません。</div>'}
+      </div>
+    </div>
+  `;
+</script>
+</body>
+</html>

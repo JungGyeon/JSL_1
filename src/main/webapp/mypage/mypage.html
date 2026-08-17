@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>マイページ — ANIVERSE</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="../css/style.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav class="navbar navbar-expand-md navbar-custom py-3">
+  <div class="container">
+    <a class="navbar-brand brand" href="../index.html">ANI<span>VERSE</span></a>
+    <div class="d-flex align-items-center gap-2 order-md-3">
+      <button class="spec-toggle" id="specToggleBtn" onclick="toggleSpec()" title="画面に要件ID(例: MY-001)を表示します">⌘ 仕様書オーバーレイ</button>
+      <span id="navAuthArea"></span>
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMain" style="filter:invert(1);">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+    <div class="collapse navbar-collapse order-md-2" id="navMain">
+      <ul class="navbar-nav mx-md-3 gap-1 mt-3 mt-md-0">
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="../index.html">ホーム</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="../list/list.html">アニメ一覧</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="../recommend/recommend.html">おすすめ</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom active" href="mypage.html">マイページ</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<section class="section container req-anchor">
+  <span class="req-id">MY-001 · MY-002 · FAV-003</span>
+  <div id="mypageContent"></div>
+</section>
+
+<footer class="footer text-center req-anchor">
+  <span class="req-id" style="position:static; display:inline-block; margin-bottom:.5rem;">SYS-002</span>
+  <div>ANIVERSE — アニメおすすめサイト プロジェクト · JSP + Oracle + Bootstrap</div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="../js/anime-data.js"></script>
+<script>
+  /*
+    이 페이지는 백엔드 연동 전 목업입니다.
+    - 로그인 여부: URL의 ?nick= 파라미터로만 임시 판별 (실제로는 세션의 로그인 정보 사용, MY-001)
+    - 찜 목록: 로그인 페이지에서 값이 넘어오지 않으므로, 데모용으로 3개 작품을 미리 찜한 것처럼 보여줍니다
+      (실제 구현 시 FAVORITE 테이블에서 로그인 사용자의 찜 목록을 조회, FAV-003)
+  */
+  const params = new URLSearchParams(location.search);
+  const nickname = params.get("nick");
+  const DEMO_FAV_IDS = [1, 4, 8];
+
+  const navAuthArea = document.getElementById("navAuthArea");
+  const content = document.getElementById("mypageContent");
+
+  if(!nickname){
+    navAuthArea.innerHTML = `<a class="btn btn-outline-soft btn-sm" href="../login/login.html">ログイン</a>`;
+    content.innerHTML = `<div class="empty-state">ログインが必要なページです。<br><a class="btn btn-accent mt-3" href="../login/login.html">ログインする</a></div>`;
+  }else{
+    navAuthArea.innerHTML = `
+      <span class="text-muted small me-2 d-none d-sm-inline">${nickname}さん</span>
+      <a class="btn btn-outline-soft btn-sm" href="../index.html">ログアウト</a>`;
+
+    const favs = ANIME.filter(a => DEMO_FAV_IDS.includes(a.id));
+    content.innerHTML = `
+      <div class="d-flex align-items-center gap-3 mb-4">
+        <div class="avatar-ring"><div class="inner">${nickname.slice(0,1)}</div></div>
+        <div>
+          <h4 class="mb-0">${nickname}</h4>
+          <div class="text-muted small">お気に入り${favs.length}件</div>
+        </div>
+      </div>
+      <h5 class="mb-3">マイお気に入りリスト</h5>
+      <div class="row g-3">
+        ${favs.map(a => cardHTML(a, "../detail/detail.html", true)).join("")}
+      </div>
+    `;
+  }
+
+  function onFavClick(id){
+    // 마이페이지에서는 찜 해제 데모 (새로고침 시 초기화됩니다 — 실제로는 DB DELETE, FAV-004)
+    alert("実装時は、この作品がお気に入りリストから削除されます。");
+  }
+</script>
+</body>
+</html>
