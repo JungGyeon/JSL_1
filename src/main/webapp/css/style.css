@@ -1,6 +1,4 @@
-/* =========================================================
-   ANIVERSE 공용 스타일시트
-   ========================================================= */
+
 :root{
   --bg:#14111f;
   --surface:#1e1a2e;
@@ -8,8 +6,8 @@
   --border:#332c4a;
   --text:#f2eefb;
   --text-muted:#9c93b8;
-  --accent:#ff6b81;      /* 찜 */
-  --accent-2:#6ee7d8;    /* 태그 / 추천 */
+  --accent:#ff6b81;      
+  --accent-2:#6ee7d8;    
   --accent-2-deep:#1f7a70;
 }
 *{box-sizing:border-box;}
@@ -63,7 +61,6 @@ a{text-decoration:none;}
   background:rgba(110,231,216,.08);
 }
 
-/* ---- 요구사항 ID 배지 (명세서 오버레이) ---- */
 .req-id{
   display:none;
   font-family:'JetBrains Mono',monospace;
@@ -152,6 +149,17 @@ body.spec-mode .req-id{display:inline-block;}
   cursor:pointer;
 }
 .poster .fav-btn.active{color:var(--accent);}
+
+.card-fav-btn{
+  position:absolute; top:.5rem; left:.5rem;
+  width:30px; height:30px; border-radius:50%;
+  background:rgba(20,17,31,.75);
+  color:var(--accent);
+  font-size:.9rem; text-decoration:none;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; z-index:2;
+}
+.card-fav-btn:hover{ background:rgba(20,17,31,.9); color:var(--accent); }
 .poster-title{
   position:relative; z-index:2; width:100%;
   background:linear-gradient(0deg, rgba(0,0,0,.75), transparent);
