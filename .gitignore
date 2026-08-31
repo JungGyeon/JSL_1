@@ -1,1 +1,21 @@
+# Build
+
 /build/
+/bin/
+/target/
+
+# Java compiled files
+
+*.class
+
+# Eclipse
+
+.settings/
+
+# macOS
+
+.DS_Store
+
+# Logs
+
+*.log
