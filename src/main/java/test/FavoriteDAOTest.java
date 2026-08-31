@@ -20,6 +20,9 @@ public class FavoriteDAOTest {
 	        System.out.println("제목 : " + anime.getTitle());
 	        System.out.println("타입 : " + anime.getType());
 	        System.out.println("점수 : " + anime.getScore());
+	        
+	        
+	        // pr test ing,,,
 	    }
 	}
 }
