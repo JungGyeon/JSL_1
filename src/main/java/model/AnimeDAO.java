@@ -1,0 +1,137 @@
+package model;
+
+import java.sql.Connection;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+import util.DBManager;
+
+public class AnimeDAO {
+
+// 애니메이션 전체 목록 조회
+	public List<AnimeDTO> getAnimeList() {
+
+		Connection conn = null;
+		PreparedStatement pstm = null;
+		ResultSet rs = null;
+
+		String sql = "SELECT * " + "FROM ANIME " + "ORDER BY ANIME_ID";
+
+		List<AnimeDTO> list = new ArrayList<AnimeDTO>();
+
+		try {
+
+			conn = DBManager.getInstance();
+			pstm = conn.prepareStatement(sql);
+			rs = pstm.executeQuery();
+
+			while (rs.next()) {
+
+				AnimeDTO dto = new AnimeDTO();
+
+				dto.setAnimeId(rs.getInt("ANIME_ID"));
+				dto.setTitle(rs.getString("TITLE"));
+				dto.setType(rs.getString("TYPE"));
+				dto.setEpisodes(rs.getInt("EPISODES"));
+				dto.setStatus(rs.getString("STATUS"));
+				dto.setSeason(rs.getString("SEASON"));
+				dto.setYear(rs.getInt("YEAR"));
+				dto.setPicture(rs.getString("PICTURE"));
+				dto.setThumbnail(rs.getString("THUMBNAIL"));
+				dto.setScore(rs.getDouble("SCORE"));
+				dto.setDurationValue(rs.getInt("DURATION_VALUE"));
+				dto.setDurationUnit(rs.getString("DURATION_UNIT"));
+
+				list.add(dto);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		} finally {
+			DBManager.close(rs, pstm, conn);
+		}
+		return list;
+
+	}
+
+	// 애니메이션 검색
+	public List<AnimeDTO> searchAnime(String title) {
+		Connection conn = null;
+		PreparedStatement pstm = null;
+		ResultSet rs = null;
+		String sql = "SELECT * FROM ANIME WHERE TITLE LIKE ? ORDER BY ANIME_ID";
+		List<AnimeDTO> list = new ArrayList<AnimeDTO>();
+		AnimeDTO dto = null;
+
+		try {
+			conn = DBManager.getInstance();
+			pstm = conn.prepareStatement(sql);
+			pstm.setString(1, "%" + title + "%");
+			rs = pstm.executeQuery();
+			while (rs.next()) {
+				dto = new AnimeDTO();
+
+				dto.setAnimeId(rs.getInt("ANIME_ID"));
+				dto.setTitle(rs.getString("TITLE"));
+				dto.setType(rs.getString("TYPE"));
+				dto.setEpisodes(rs.getInt("EPISODES"));
+				dto.setStatus(rs.getString("STATUS"));
+				dto.setSeason(rs.getString("SEASON"));
+				dto.setYear(rs.getInt("YEAR"));
+				dto.setPicture(rs.getString("PICTURE"));
+				dto.setThumbnail(rs.getString("THUMBNAIL"));
+				dto.setScore(rs.getDouble("SCORE"));
+				dto.setDurationValue(rs.getInt("DURATION_VALUE"));
+				dto.setDurationUnit(rs.getString("DURATION_UNIT"));
+
+				list.add(dto);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+
+	}
+
+	public AnimeDTO getAnimeDetail(int animeId) {
+		Connection conn = null;
+		PreparedStatement pstm = null;
+		ResultSet rs = null;
+		AnimeDTO dto = null;
+
+		String sql = "select * from ANIME where anime_id = ?";
+
+		try {
+
+			conn = DBManager.getInstance();
+			pstm = conn.prepareStatement(sql);
+			pstm.setInt(1, animeId);
+			rs = pstm.executeQuery();
+
+			while (rs.next()) {
+				dto = new AnimeDTO();
+				dto.setAnimeId(rs.getInt("ANIME_ID"));
+				dto.setTitle(rs.getString("TITLE"));
+				dto.setType(rs.getString("TYPE"));
+				dto.setEpisodes(rs.getInt("EPISODES"));
+				dto.setStatus(rs.getString("STATUS"));
+				dto.setSeason(rs.getString("SEASON"));
+				dto.setYear(rs.getInt("YEAR"));
+				dto.setPicture(rs.getString("PICTURE"));
+				dto.setThumbnail(rs.getString("THUMBNAIL"));
+				dto.setScore(rs.getDouble("SCORE"));
+				dto.setDurationValue(rs.getInt("DURATION_VALUE"));
+				dto.setDurationUnit(rs.getString("DURATION_UNIT"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dto;
+
+	}
+}
