@@ -74,7 +74,7 @@
 			</form>
 
 			<p class="text-center text-muted small mt-3 mb-0">
-				アカウントをお持ちでないですか? <a href="../member/join.jsp"
+				アカウントをお持ちでないですか? <a href="../join/join.jsp"
 					style="color: var(--accent-2);">会員登録</a>
 			</p>
 		</div>

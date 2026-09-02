@@ -49,6 +49,37 @@ public class UserDAO {
 		return duplicate;
 	}
 
+	// USER-003(닉네임) : 닉네임 중복 확인
+	public boolean isDuplicateNickname(String nickname) {
+
+		boolean duplicate = false;
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		String sql = "SELECT NICKNAME FROM " + TABLE + " WHERE NICKNAME = ?";
+
+		try {
+
+			conn = DBManager.getInstance();
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setString(1, nickname);
+
+			rs = pstmt.executeQuery();
+
+			duplicate = rs.next();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBManager.close(rs, pstmt, conn);
+		}
+
+		return duplicate;
+	}
+
 	// USER-002 : 회원가입 처리 (비밀번호는 BCrypt로 해시하여 저장한다)
 	public void insertUser(UserDTO dto) {
 

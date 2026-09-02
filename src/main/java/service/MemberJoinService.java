@@ -59,6 +59,12 @@ public class MemberJoinService implements Command {
 			return;
 		}
 
+		// USER-003(닉네임) : 닉네임 중복 확인 (버튼 클릭으로 한 번 확인했더라도, 최종 제출 시 서버에서 다시 확인)
+		if (dao.isDuplicateNickname(nickname)) {
+			fail(request, "이미 사용 중인 닉네임입니다.");
+			return;
+		}
+
 		UserDTO dto = new UserDTO();
 		dto.setUserId(userId);
 		dto.setPassword(userPw);

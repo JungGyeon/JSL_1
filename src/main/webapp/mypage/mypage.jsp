@@ -3,8 +3,17 @@
 
 <%@ page import="java.util.List"%>
 <%@ page import="model.AnimeDTO"%>
+<%@ page import="model.UserDTO"%>
+<%@ page import="model.UserDAO"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<%
+	// MY-001 : 회원정보 조회. 로그인 사용자(userid)를 기준으로 USER 테이블에서 최신 프로필을 조회한다.
+	String loginId = (String) session.getAttribute("userid");
+	UserDTO loginUser = (loginId != null) ? new UserDAO().getUserById(loginId) : null;
+	request.setAttribute("loginUser", loginUser);
+%>
 
 <!DOCTYPE html>
 <html lang="ja">
@@ -29,7 +38,13 @@
 				<button class="spec-toggle" id="specToggleBtn"
 					onclick="toggleSpec()" title="画面に要件ID(例: MY-001)を表示します">⌘
 					仕様書オーバーレイ</button>
-				<span id="navAuthArea"></span>
+				<span id="navAuthArea">
+					<c:if test="${not empty sessionScope.userid}">
+						<span class="text-muted small me-2 d-none d-sm-inline">${sessionScope.nickname}さん</span>
+						<a class="btn btn-outline-soft btn-sm"
+							href="${pageContext.request.contextPath}/member/logout.do">ログアウト</a>
+					</c:if>
+				</span>
 				<button class="navbar-toggler border-0" type="button"
 					data-bs-toggle="collapse" data-bs-target="#navMain"
 					style="filter: invert(1);">
@@ -44,9 +59,8 @@
 						href="../list/list.html">アニメ一覧</a></li>
 					<li class="nav-item"><a class="nav-link nav-link-custom"
 						href="../recommend/recommend.html">おすすめ</a></li>
-					<li class="nav-item"><a
-						class="nav-link nav-link-custom active"
-						href="${pageContext.request.contextPath}/favorite/list.do">マイページ</a></li>
+					<li class="nav-item"><a class="nav-link nav-link-custom active" 
+						href="${pageContext.request.contextPath}/favorite/list.do?userId=${sessionScope.userid}">マイページ</a></li>
 				</ul>
 			</div>
 		</div>
@@ -55,14 +69,50 @@
 	<section class="section container req-anchor">
 		<span class="req-id">MY-001 · MY-002 · FAV-003</span>
 
-		<div class="d-flex align-items-center gap-3 mb-4">
+		<div class="d-flex align-items-center gap-3 mb-3">
 			<div class="avatar-ring">
 				<div class="inner">${sessionScope.userid.substring(0,1)}</div>
 			</div>
 			<div>
-				<h4 class="mb-0">${sessionScope.userid}</h4>
-				<div class="text-muted small">お気に入り${list.size()}件</div>
+				<h4 class="mb-0">${loginUser.nickname}</h4>
+				<div class="text-muted small">ID: ${sessionScope.userid} ·
+					お気に入り${list.size()}件</div>
 			</div>
+			<button class="btn btn-outline-soft btn-sm ms-auto" type="button"
+				onclick="toggleEditForm()">会員情報修正</button>
+		</div>
+
+		<!-- MY-001 : 회원정보 조회 -->
+		<div class="surface p-3 p-md-4 mb-4">
+			<div class="row g-2">
+				<div class="col-md-6">
+					<span class="text-muted small">ニックネーム</span>
+					<div>${loginUser.nickname}</div>
+				</div>
+				<div class="col-md-6">
+					<span class="text-muted small">メールアドレス</span>
+					<div>${loginUser.email}</div>
+				</div>
+			</div>
+
+			<!-- MY-002 : 회원정보 수정 (선택 기능) -->
+			<form id="editForm" style="display: none;" class="row g-2 mt-3"
+				action="${pageContext.request.contextPath}/member/update.do"
+				method="post">
+				<div class="col-md-6">
+					<label class="form-label-custom">ニックネーム</label> <input
+						type="text" class="form-control form-control-custom"
+						name="nickname" value="${loginUser.nickname}" required>
+				</div>
+				<div class="col-md-6">
+					<label class="form-label-custom">メールアドレス</label> <input
+						type="email" class="form-control form-control-custom"
+						name="email" value="${loginUser.email}" required>
+				</div>
+				<div class="col-12">
+					<button class="btn btn-accent btn-sm mt-2" type="submit">保存する</button>
+				</div>
+			</form>
 		</div>
 
 		<h5 class="mb-3">マイお気に入りリスト</h5>
@@ -110,5 +160,12 @@
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
 	<script src="../js/anime-data.js"></script>
+	<script>
+    // MY-002 : 회원정보 수정 폼 표시/숨김 토글
+    function toggleEditForm(){
+      const form = document.getElementById("editForm");
+      form.style.display = (form.style.display === "none") ? "block" : "none";
+    }
+  </script>
 </body>
 </html>

@@ -84,10 +84,15 @@
 				</div>
 
 				<div class="mb-3">
-					<label class="form-label-custom">ニックネーム</label> <input
-						type="text" class="form-control form-control-custom"
-						name="nickname" id="joinNick" value="${param.nickname}"
-						placeholder="ニックネームを入力" required>
+					<label class="form-label-custom">ニックネーム</label>
+					<div class="d-flex gap-2">
+						<input type="text" class="form-control form-control-custom"
+							name="nickname" id="joinNick" value="${param.nickname}"
+							placeholder="ニックネームを入力" required>
+						<button class="btn btn-outline-soft flex-shrink-0" type="button"
+							onclick="checkNicknameDup()">重複確認</button>
+					</div>
+					<div class="small mt-1" id="nickDupResult"></div>
 				</div>
 
 				<div class="mb-2">
@@ -138,6 +143,8 @@
 
     let idChecked = false;      // USER-003 : 아이디 중복 확인을 통과했는지
     let idCheckedValue = "";    // 중복 확인을 통과한 시점의 아이디 값
+    let nicknameChecked = false;      // USER-003(닉네임) : 닉네임 중복 확인을 통과했는지
+    let nicknameCheckedValue = "";    // 중복 확인을 통과한 시점의 닉네임 값
     let emailVerified = false;  // 이메일 인증(데모용 인증번호)을 통과했는지
     let emailVerifiedValue = ""; // 인증을 통과한 시점의 이메일 값
     let codeRequested = false;
@@ -161,6 +168,32 @@
           }else{
             res.innerHTML = '<span style="color:#ffb4c0;">IDを入力してください。</span>';
             idChecked = false;
+          }
+        })
+        .catch(() => {
+          res.innerHTML = '<span style="color:#ffb4c0;">確認中にエラーが発生しました。</span>';
+        });
+    }
+
+    // USER-003(닉네임) : 닉네임 중복 확인 (member/nickcheck.do 비동기 호출)
+    function checkNicknameDup(){
+      const nickname = document.getElementById("joinNick").value.trim();
+      const res = document.getElementById("nickDupResult");
+      if(!nickname){ res.innerHTML = '<span style="color:#ffb4c0;">ニックネームを入力してください。</span>'; return; }
+
+      fetch(CTX + "/member/nickcheck.do?nickname=" + encodeURIComponent(nickname))
+        .then(r => r.text())
+        .then(result => {
+          if(result === "dup"){
+            res.innerHTML = '<span style="color:#ffb4c0;">すでに使用されているニックネームです。</span>';
+            nicknameChecked = false;
+          }else if(result === "ok"){
+            res.innerHTML = '<span style="color:var(--accent-2);">使用可能なニックネームです。</span>';
+            nicknameChecked = true;
+            nicknameCheckedValue = nickname;
+          }else{
+            res.innerHTML = '<span style="color:#ffb4c0;">ニックネームを入力してください。</span>';
+            nicknameChecked = false;
           }
         })
         .catch(() => {
@@ -247,6 +280,11 @@
       }
       if(!idChecked || idCheckedValue !== id){
         alert("IDの重複確認をしてください。");
+        return false;
+      }
+      const nickname = document.getElementById("joinNick").value.trim();
+      if(!nicknameChecked || nicknameCheckedValue !== nickname){
+        alert("ニックネームの重複確認をしてください。");
         return false;
       }
       if(!emailVerified || emailVerifiedValue !== email){

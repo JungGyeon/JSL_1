@@ -16,6 +16,7 @@ import service.MemberInfoUpdateService;
 import service.MemberJoinService;
 import service.MemberLoginService;
 import service.MemberLogoutService;
+import service.MemberNicknameCheckService;
 
 /**
  * 회원(USER) 관련 기능을 담당하는 컨트롤러.
@@ -79,12 +80,17 @@ public class MemberController extends HttpServlet {
 				response.sendRedirect(contextPath + "/favorite/list.do?userId=" + userId);
 				return;
 			}
-			page = "/member/join.jsp";
+			page = "/join/join.jsp";
 			break;
 		}
 
 		case "/idcheck.do": {
 			new MemberIdCheckService().doCommand(request, response);
+			return;
+		}
+
+		case "/nickcheck.do": {
+			new MemberNicknameCheckService().doCommand(request, response);
 			return;
 		}
 
