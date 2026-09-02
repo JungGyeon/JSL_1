@@ -108,6 +108,4 @@ public class FavoriteDAO {
 		return list;
 	}
 	
-	
-	
 }
