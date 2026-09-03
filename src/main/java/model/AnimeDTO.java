@@ -14,7 +14,17 @@ public class AnimeDTO {
 	private double score;
 	private int durationValue;
 	private String durationUnit;
+	public int getFavoriteCount() {
+		return favoriteCount;
+	}
 
+	public void setFavoriteCount(int favoriteCount) {
+		this.favoriteCount = favoriteCount;
+	}
+
+	private int favoriteCount;
+	
+	
 	public int getAnimeId() {
 		return animeId;
 	}
