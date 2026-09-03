@@ -19,3 +19,11 @@
 # Logs
 
 *.log
+
+# SOCIAL-001 : 구글/라인 Client ID·Secret이 들어있는 실제 설정 파일 (절대 커밋 금지)
+# 각자 oauth.properties.example을 복사해서 로컬에 oauth.properties로 만들어 사용할 것
+src/main/java/oauth.properties
+
+# 이메일 인증 발송용 계정 정보(비밀번호 포함) - 절대 커밋 금지
+# 각자 mail.properties.example을 복사해서 로컬에 mail.properties로 만들어 사용할 것
+src/main/java/mail.properties
