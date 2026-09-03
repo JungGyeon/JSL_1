@@ -34,9 +34,19 @@
 			</a>
 
 			<div class="d-flex align-items-center gap-2 order-md-3">
-				<a class="btn btn-outline-soft btn-sm"
-					href="${pageContext.request.contextPath}/login/login.html">
-					ログイン </a>
+				<c:choose>
+					<c:when test="${not empty sessionScope.userid}">
+						<span class="text-muted small me-2 d-none d-sm-inline">${sessionScope.nickname}さん</span>
+						<a class="btn btn-outline-soft btn-sm"
+							href="${pageContext.request.contextPath}/member/logout.do">
+							ログアウト </a>
+					</c:when>
+					<c:otherwise>
+						<a class="btn btn-outline-soft btn-sm"
+							href="${pageContext.request.contextPath}/member/loginForm.do">
+							ログイン </a>
+					</c:otherwise>
+				</c:choose>
 				<button class="btn btn-outline-soft btn-sm" type="button"
 					id="themeToggleBtn" onclick="toggleTheme()"
 					title="ダークモード/ライトモード切り替え">🌙</button>
@@ -59,7 +69,7 @@
 						href="${pageContext.request.contextPath}/recommend/recommend.html">
 							おすすめ </a></li>
 					<li class="nav-item"><a class="nav-link nav-link-custom"
-						href="${pageContext.request.contextPath}/favorite/list.do">
+						href="${pageContext.request.contextPath}/favorite/list.do?userId=${sessionScope.userid}">
 							マイページ </a></li>
 				</ul>
 			</div>
