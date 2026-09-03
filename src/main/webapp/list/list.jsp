@@ -1,8 +1,27 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
+<%@ page import="model.AnimeDTO"%>
+<%@ page import="java.util.List"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%
+String title = (String) request.getAttribute("title");
+String year = (String) request.getAttribute("year");
+String sort = (String) request.getAttribute("sort");
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+if (title == null) {
+	title = "";
+}
 
+if (year == null) {
+	year = "";
+}
+
+if (sort == null) {
+	sort = "score";
+}
+
+List<AnimeDTO> list = (List<AnimeDTO>) request.getAttribute("list");
+%>
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -12,212 +31,235 @@
 
 <title>アニメ一覧 — ANIVERSE</title>
 
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"
-      rel="stylesheet">
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"
+	rel="stylesheet">
 
 <link href="${pageContext.request.contextPath}/css/style.css"
-      rel="stylesheet">
+	rel="stylesheet">
 </head>
 
 <body>
 
-<nav class="navbar navbar-expand-md navbar-custom py-3">
+	<nav class="navbar navbar-expand-md navbar-custom py-3">
 
-    <div class="container">
+		<div class="container">
 
-        <a class="navbar-brand brand"
-           href="${pageContext.request.contextPath}/index.html">
-            ANI<span>VERSE</span>
-        </a>
+			<a class="navbar-brand brand"
+				href="${pageContext.request.contextPath}/main.do"> ANI<span>VERSE</span>
+			</a>
 
-        <div class="collapse navbar-collapse">
+			<div class="collapse navbar-collapse">
 
-            <ul class="navbar-nav mx-md-3 gap-1">
+				<ul class="navbar-nav mx-md-3 gap-1">
 
-                <li class="nav-item">
-                    <a class="nav-link nav-link-custom"
-                       href="${pageContext.request.contextPath}/index.html">
-                        ホーム
-                    </a>
-                </li>
+					<li class="nav-item"><a class="nav-link nav-link-custom"
+						href="${pageContext.request.contextPath}/main.do"> ホーム </a></li>
 
-                <li class="nav-item">
-                    <a class="nav-link nav-link-custom active"
-                       href="${pageContext.request.contextPath}/anime/list.do">
-                        アニメ一覧
-                    </a>
-                </li>
+					<li class="nav-item"><a
+						class="nav-link nav-link-custom active"
+						href="${pageContext.request.contextPath}/anime/list.do"> アニメ一覧
+					</a></li>
 
-                <li class="nav-item">
-                    <a class="nav-link nav-link-custom"
-                       href="${pageContext.request.contextPath}/recommend/recommend.html">
-                        おすすめ
-                    </a>
-                </li>
+					<li class="nav-item"><a class="nav-link nav-link-custom"
+						href="${pageContext.request.contextPath}/recommend/recommend.html">
+							おすすめ </a></li>
 
-            </ul>
+				</ul>
 
-        </div>
+			</div>
 
-    </div>
+		</div>
 
-</nav>
+	</nav>
 
 
-<section class="sub-hero">
+	<section class="sub-hero">
 
-    <div class="container">
+		<div class="container">
 
-        <h2 class="mb-0">アニメ一覧</h2>
+			<h2 class="mb-0">アニメ一覧</h2>
 
-    </div>
+		</div>
 
-</section>
+	</section>
 
 
-<section class="section container">
+	<section class="section container">
 
-    <!-- 검색 -->
-    <div class="surface p-3 p-md-4 mb-4">
+		<!-- 검색 영역 -->
 
-        <form method="get"
-              action="${pageContext.request.contextPath}/anime/search.do"
-              class="row g-2">
+		<div class="surface p-3 p-md-4 mb-4">
 
-            <div class="col-md-10">
+			<form action="${pageContext.request.contextPath}/anime/search.do"
+				method="get" class="row g-2 align-items-end">
+				<!-- command -->
 
-                <input type="text"
-                       class="form-control form-control-custom"
-                       name="title"
-                       placeholder="タイトルを入力">
 
-            </div>
 
-            <div class="col-md-2">
+				<!-- タイトル検索 -->
 
-                <button type="submit"
-                        class="btn btn-accent w-100">
-                    検索
-                </button>
+				<div class="col-md-4">
 
-            </div>
+					<label class="form-label-custom"> タイトル検索 </label> <input
+						type="text" class="form-control form-control-custom" name="title"
+						value="<%=title != null ? title : ""%>" placeholder="タイトルを入力">
 
-        </form>
+				</div>
 
-    </div>
 
+				<!-- 放送年 -->
 
-    <!-- 결과 개수 -->
+				<div class="col-md-3">
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
+					<label class="form-label-custom"> 放送年 </label> <select
+						class="form-select form-control-custom" name="year">
 
-        <span class="text-muted small">
-            全${list.size()}件
-        </span>
+						<option value="">すべて</option>
 
-    </div>
+						<%
+						String selectedYear = (String) request.getAttribute("year");
 
+						if (selectedYear == null) {
+							selectedYear = "";
+						}
 
-    <!-- 애니메이션 목록 -->
+						for (int y = 2025; y >= 1980; y--) {
+						%>
 
-    <div class="row g-3">
+						<option value="<%=y%>"
+							<%=String.valueOf(y).equals(selectedYear) ? "selected" : ""%>>
 
-        <c:forEach var="anime" items="${list}">
+							<%=y%>年
 
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+						</option>
 
-                <div class="card h-100">
+						<%
+						}
+						%>
 
-                    <c:choose>
+					</select>
 
-                        <c:when test="${not empty anime.thumbnail}">
+				</div>
 
-                            <img src="${anime.thumbnail}"
-                                 class="card-img-top"
-                                 alt="${anime.title}">
 
-                        </c:when>
+				<!-- 並び替え -->
 
-                        <c:otherwise>
+				<div class="col-md-3">
 
-                            <div class="p-5 text-center">
-                                No Image
-                            </div>
+					<label class="form-label-custom"> 並び替え </label> <select
+						class="form-select form-control-custom" name="sort">
 
-                        </c:otherwise>
+						<option value="score" <%="score".equals(sort) ? "selected" : ""%>>評価順</option>
 
-                    </c:choose>
+						<option value="year" <%="year".equals(sort) ? "selected" : ""%>>
+							新着順</option>
 
+						<option value="title" <%="title".equals(sort) ? "selected" : ""%>>タイトル順</option>
 
-                    <div class="card-body">
+					</select>
 
-                        <h5 class="card-title">
-                            ${anime.title}
-                        </h5>
+				</div>
 
-                        <p class="card-text">
 
-                            ${anime.type}
+				<!-- 検索 -->
 
-                            <br>
+				<div class="col-md-2">
 
-                            ${anime.year}
+					<button class="btn btn-accent w-100" type="submit">検索</button>
 
-                            <br>
+				</div>
 
-                            ${anime.episodes}話
+			</form>
 
-                            <br>
+		</div>
 
-                            ★ ${anime.score}
 
-                        </p>
+		<!-- 결과 개수 -->
 
+		<div class="d-flex justify-content-between align-items-center mb-3">
 
-                        <a href="${pageContext.request.contextPath}/anime/detail.do?animeId=${anime.animeId}"
-                           class="btn btn-accent btn-sm">
+			<span class="text-muted small"> 全${list.size()}件 </span>
 
-                            詳細を見る
+		</div>
 
-                        </a>
 
-                    </div>
+		<!-- 애니메이션 목록 -->
 
-                </div>
+		<div class="row g-3">
 
-            </div>
+			<c:forEach var="anime" items="${list}">
 
-        </c:forEach>
+				<div class="col-12 col-sm-6 col-md-4 col-lg-3">
 
+					<div class="card h-100">
 
-        <!-- 데이터가 없을 경우 -->
+						<c:choose>
 
-        <c:if test="${empty list}">
+							<c:when test="${not empty anime.thumbnail}">
 
-            <div class="col-12">
+								<img src="${anime.thumbnail}" class="card-img-top"
+									alt="${anime.title}">
 
-                <div class="empty-state">
+							</c:when>
 
-                    アニメが見つかりません。
+							<c:otherwise>
 
-                </div>
+								<div class="p-5 text-center">No Image</div>
 
-            </div>
+							</c:otherwise>
 
-        </c:if>
+						</c:choose>
 
-    </div>
 
-</section>
+						<div class="card-body">
 
+							<h5 class="card-title">${anime.title}</h5>
 
-<footer class="footer text-center">
+							<p class="card-text">
 
-    <div>
-        ANIVERSE — アニメおすすめサイト プロジェクト
-    </div>
+								${anime.type} <br> ${anime.year} <br>
 
-</footer>
+								${anime.episodes}話 <br> ★ ${anime.score}
+
+							</p>
+
+
+							<a
+								href="${pageContext.request.contextPath}/anime/detail.do?animeId=${anime.animeId}"
+								class="btn btn-accent btn-sm"> 詳細を見る </a>
+
+						</div>
+
+					</div>
+
+				</div>
+
+			</c:forEach>
+
+
+			<!-- 데이터가 없을 경우 -->
+
+			<c:if test="${empty list}">
+
+				<div class="col-12">
+
+					<div class="empty-state">アニメが見つかりません。</div>
+
+				</div>
+
+			</c:if>
+
+		</div>
+
+	</section>
+
+
+	<footer class="footer text-center">
+
+		<div>ANIVERSE — アニメおすすめサイト プロジェクト</div>
+
+	</footer>
 
 </body>
 </html>

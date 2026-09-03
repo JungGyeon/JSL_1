@@ -18,12 +18,19 @@ public class AnimeSearchService implements Command {
 		request.setCharacterEncoding("utf-8");
 
 		String title = request.getParameter("title");
+		String year = request.getParameter("year");
+		String sort = request.getParameter("sort");
+		
 
 		AnimeDAO dao = new AnimeDAO();
-		List<AnimeDTO> list = dao.searchAnime(title);
+		List<AnimeDTO> list = dao.searchAnime(title,year,sort);
 
 		request.setAttribute("list", list); // 검색 결과용
 		request.setAttribute("title", title); // 검색 이름 표시 
+		request.setAttribute("year", year);
+		request.setAttribute("sort", sort);
+		
+		
 	}
 
 }

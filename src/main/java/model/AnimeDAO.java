@@ -59,20 +59,52 @@ public class AnimeDAO {
 	}
 
 	// 애니메이션 검색
-	public List<AnimeDTO> searchAnime(String title) {
+	public List<AnimeDTO> searchAnime(String title, String year, String sort) {
+		if (title == null) {
+			title = "";
+		}
 		Connection conn = null;
 		PreparedStatement pstm = null;
 		ResultSet rs = null;
-		String sql = "SELECT * FROM ANIME WHERE TITLE LIKE ? ORDER BY ANIME_ID";
+
 		List<AnimeDTO> list = new ArrayList<AnimeDTO>();
 		AnimeDTO dto = null;
 
+		String sql = "SELECT * FROM ANIME WHERE TITLE LIKE ?";
+
+		// 방송년도 선택
+		if (year != null && !year.equals("")) {
+			sql += " AND YEAR = ?";
+		}
+
+		// 정렬
+		if ("score".equals(sort)) {
+			sql += " ORDER BY SCORE DESC";
+		} else if ("year".equals(sort)) {
+			sql += " ORDER BY YEAR DESC";
+		} else if ("title".equals(sort)) {
+			sql += " ORDER BY TITLE ASC";
+		} else {
+			sql += " ORDER BY ANIME_ID";
+		}
+
 		try {
+
 			conn = DBManager.getInstance();
 			pstm = conn.prepareStatement(sql);
-			pstm.setString(1, "%" + title + "%");
+
+			int index = 1;
+
+			pstm.setString(index++, "%" + title + "%");
+
+			if (year != null && !year.equals("")) {
+				pstm.setInt(index++, Integer.parseInt(year));
+			}
+
 			rs = pstm.executeQuery();
+
 			while (rs.next()) {
+
 				dto = new AnimeDTO();
 
 				dto.setAnimeId(rs.getInt("ANIME_ID"));
@@ -94,8 +126,8 @@ public class AnimeDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return list;
 
+		return list;
 	}
 
 	public AnimeDTO getAnimeDetail(int animeId) {
