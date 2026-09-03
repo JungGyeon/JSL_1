@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpSession;
 
 import service.FavoriteAddService;
 import service.FavoriteDeleteService;
@@ -52,6 +53,12 @@ public class FavoriteController extends HttpServlet {
 			new FavoriteDeleteService().doCommand(request, response);
 			break;
 		case "/list.do":
+			HttpSession session = request.getSession(false);
+		    Object sessionUserId = (session != null) ? session.getAttribute("userid") : null;
+		    if (sessionUserId == null) {
+		        response.sendRedirect(request.getContextPath() + "/member/loginForm.do");
+		        return;
+		    }
 		    new FavoriteListService().doCommand(request, response);
 		    page = "/mypage/mypage.jsp";
 		    break;

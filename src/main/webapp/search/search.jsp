@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <%@ page import="java.util.List"%>
 <%@ page import="model.AnimeDTO"%>
 
@@ -68,8 +70,19 @@ List<AnimeDTO> list = (List<AnimeDTO>) request.getAttribute("list");
 				<button class="spec-toggle" id="specToggleBtn"
 					title="画面に要件ID(例: ANI-001)を表示します">⌘ 仕様書オーバーレイ</button>
 
-				<a class="btn btn-outline-soft btn-sm" href="../login/login.jsp">
-					ログイン </a>
+				<c:choose>
+					<c:when test="${not empty sessionScope.userid}">
+						<span class="text-muted small me-2 d-none d-sm-inline">${sessionScope.nickname}さん</span>
+						<a class="btn btn-outline-soft btn-sm"
+							href="${pageContext.request.contextPath}/member/logout.do">
+							ログアウト </a>
+					</c:when>
+					<c:otherwise>
+						<a class="btn btn-outline-soft btn-sm"
+							href="${pageContext.request.contextPath}/member/loginForm.do">
+							ログイン </a>
+					</c:otherwise>
+				</c:choose>
 
 				<button class="navbar-toggler border-0" type="button"
 					data-bs-toggle="collapse" data-bs-target="#navMain"
@@ -197,8 +210,7 @@ List<AnimeDTO> list = (List<AnimeDTO>) request.getAttribute("list");
 
 						<option value="score" <%="score".equals(sort) ? "selected" : ""%>>評価順</option>
 
-						<option value="year" <%="year".equals(sort) ? "selected" : ""%>>
-							新着順</option>
+						<option value="year" <%="year".equals(sort) ? "selected" : ""%>>新着順</option>
 
 						<option value="title" <%="title".equals(sort) ? "selected" : ""%>>タイトル順</option>
 
