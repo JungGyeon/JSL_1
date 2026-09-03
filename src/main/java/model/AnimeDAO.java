@@ -166,4 +166,66 @@ public class AnimeDAO {
 		return dto;
 
 	}
+	
+	public List<AnimeDTO> getPopularAnimeList() {
+
+	    Connection conn = null;
+	    PreparedStatement pstm = null;
+	    ResultSet rs = null;
+
+	    List<AnimeDTO> list = new ArrayList<AnimeDTO>();
+
+	    String sql =
+	            "SELECT A.*, COUNT(F.USER_ID) AS FAVORITE_COUNT "
+	          + "FROM ANIME A "
+	          + "JOIN FAVORITE F "
+	          + "ON A.ANIME_ID = F.ANIME_ID "
+	          + "GROUP BY "
+	          + "A.ANIME_ID, A.TITLE, A.TYPE, A.EPISODES, "
+	          + "A.STATUS, A.SEASON, A.YEAR, A.PICTURE, "
+	          + "A.THUMBNAIL, A.SCORE, A.DURATION_VALUE, A.DURATION_UNIT "
+	          + "ORDER BY FAVORITE_COUNT DESC, A.SCORE DESC, A.ANIME_ID";
+
+	    try {
+
+	        conn = DBManager.getInstance();
+	        pstm = conn.prepareStatement(sql);
+	        rs = pstm.executeQuery();
+
+	        while (rs.next()) {
+
+	            AnimeDTO dto = new AnimeDTO();
+
+	            dto.setAnimeId(rs.getInt("ANIME_ID"));
+	            dto.setTitle(rs.getString("TITLE"));
+	            dto.setType(rs.getString("TYPE"));
+	            dto.setEpisodes(rs.getInt("EPISODES"));
+	            dto.setStatus(rs.getString("STATUS"));
+	            dto.setSeason(rs.getString("SEASON"));
+	            dto.setYear(rs.getInt("YEAR"));
+	            dto.setPicture(rs.getString("PICTURE"));
+	            dto.setThumbnail(rs.getString("THUMBNAIL"));
+	            dto.setScore(rs.getDouble("SCORE"));
+	            dto.setDurationValue(rs.getInt("DURATION_VALUE"));
+	            dto.setDurationUnit(rs.getString("DURATION_UNIT"));
+
+	            // 찜 개수
+	            dto.setFavoriteCount(rs.getInt("FAVORITE_COUNT"));
+
+	            list.add(dto);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+
+	    } finally {
+	        DBManager.close(rs, pstm, conn);
+	    }
+
+	    return list;
+	}
+
+
+
+
 }

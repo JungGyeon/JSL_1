@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+   pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
 <html lang="ja">
@@ -77,41 +79,63 @@
 			<a class="text-muted small"
 				href="${pageContext.request.contextPath}/anime/list.do">すべて見る →</a>
 		</div>
-		<div class="row g-3" id="homePopularGrid"></div>
-	</section>
+		<div class="row g-3">
+	
+	<c:if test="${empty popularList}">검색된 리스트가 없습니다</c:if>
 
-	<section class="section container">
-		<div
-			class="surface p-4 p-md-5 d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
-			<div>
-				<h4 class="mb-1">お気に入りが増えるほど、おすすめが正確になります</h4>
-				<p class="text-muted mb-0">ログインして気に入ったアニメをお気に入りに追加しましょう。</p>
-			</div>
-			<a class="btn btn-accent flex-shrink-0"
-				href="${pageContext.request.contextPath}/recommend/recommend.html">
-				おすすめを見る </a>
-		</div>
+	
+	
+   <c:forEach var="anime"
+              items="${popularList}"
+              varStatus="status"
+              end="7">
+
+      <div class="col-6 col-md-4 col-lg-3">
+
+         <div class="surface h-100 p-3">
+
+            <!-- 순위 -->
+            <div class="mono text-muted small mb-2">
+               ${status.index + 1}位
+            </div>
+
+            <!-- 썸네일 -->
+            <c:if test="${not empty anime.thumbnail}">
+               <img src="${anime.thumbnail}"
+                    alt="${anime.title}"
+                    class="img-fluid rounded mb-3">
+            </c:if>
+
+            <!-- 제목 -->
+            <h5>${anime.title}</h5>
+
+            <!-- 정보 -->
+            <div class="text-muted small mb-3">
+               ⭐ ${anime.score}
+               &nbsp;
+               ❤️ ${anime.favoriteCount}
+            </div>
+
+            <!-- 상세 페이지 -->
+            <a class="btn btn-outline-soft btn-sm"
+               href="${pageContext.request.contextPath}/anime/detail.do?animeId=${anime.animeId}">
+               詳細を見る
+            </a>
+
+         </div>
+
+      </div>
+
+   </c:forEach>
+
+</div>
 	</section>
 
 	<footer class="footer text-center">
 		<div>ANIVERSE — アニメおすすめサイト プロジェクト · JSP + Oracle + Bootstrap</div>
-		<div class="mono mt-1" style="font-size: .7rem;">この画面のトップ人気作品はダミーデータ(anime-data.js)で表示しています。</div>
+		<div class="mono mt-1" style="font-size: .7rem;">お気に入り数をもとに人気作品を表示しています。</div>
 	</footer>
 
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
-	<script src="${pageContext.request.contextPath}/js/anime-data.js"></script>
-	<script>
-		function onFavClick(id) {
-			location.href = "${pageContext.request.contextPath}/login/login.html";
-		}
-		var popular = [...ANIME].sort(function(a, b) {
-			return b.score - a.score;
-		}).slice(0, 8);
-		document.getElementById("homePopularGrid").innerHTML = popular.map(
-				function(a) {
-					return cardHTML(a, "detail/detail.html", false);
-				}).join("");
-	</script>
+
 </body>
 </html>
