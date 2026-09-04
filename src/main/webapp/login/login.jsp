@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%
+    request.setAttribute("activePage", "login");
+%>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -13,38 +16,11 @@
 <link
 	href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap"
 	rel="stylesheet">
-<link href="../css/style.css" rel="stylesheet">
+<link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
 </head>
 <body>
 
-	<!-- ===== NAV ===== -->
-	<nav class="navbar navbar-expand-md navbar-custom py-3">
-		<div class="container">
-			<a class="navbar-brand brand" href="../index.html">ANI<span>VERSE</span></a>
-			<div class="d-flex align-items-center gap-2 order-md-3">
-				<button class="spec-toggle" id="specToggleBtn"
-					onclick="toggleSpec()" title="画面に要件ID(例: AUTH-001)を表示します">⌘
-					仕様書オーバーレイ</button>
-				<button class="navbar-toggler border-0" type="button"
-					data-bs-toggle="collapse" data-bs-target="#navMain"
-					style="filter: invert(1);">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-			</div>
-			<div class="collapse navbar-collapse order-md-2" id="navMain">
-				<ul class="navbar-nav mx-md-3 gap-1 mt-3 mt-md-0">
-					<li class="nav-item"><a class="nav-link nav-link-custom"
-						href="../index.html">ホーム</a></li>
-					<li class="nav-item"><a class="nav-link nav-link-custom"
-						href="../list/list.html">アニメ一覧</a></li>
-					<li class="nav-item"><a class="nav-link nav-link-custom"
-						href="../recommend/recommend.html">おすすめ</a></li>
-					<li class="nav-item"><a class="nav-link nav-link-custom"
-						href="${pageContext.request.contextPath}/favorite/list.do?userId=${sessionScope.userid}">マイページ</a></li>
-				</ul>
-			</div>
-		</div>
-	</nav>
+	<%@ include file="/common/header.jsp"%>
 
 	<section class="section container req-anchor" style="max-width: 420px;">
 		<span class="req-id">AUTH-001 · AUTH-002 · AUTH-003</span>
@@ -101,18 +77,8 @@
 		</div>
 	</section>
 
-	<footer class="footer text-center req-anchor">
-		<span class="req-id"
-			style="position: static; display: inline-block; margin-bottom: .5rem;">SYS-002</span>
-		<div>ANIVERSE — アニメおすすめサイト プロジェクト · JSP + Oracle + Bootstrap</div>
-	</footer>
-
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
-	<script src="../js/anime-data.js"></script>
+	<%@ include file="/common/footer.jsp"%>
 	<script>
-    // 이전 제출 실패 시 떴던 에러 메시지가, 사용자가 다시 입력을 시작했는데도
-    // 화면에 그대로 남아있어 혼란을 주지 않도록 입력값이 바뀌면 즉시 숨긴다.
     (function () {
       const errBox = document.getElementById("loginErrorMsg");
       if (!errBox) return;

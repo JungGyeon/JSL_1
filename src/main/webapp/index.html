@@ -1,97 +1,81 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<% String activePage = "home"; %>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ANIVERSE — アニメおすすめサイト</title>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<link href="css/style.css" rel="stylesheet">
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap"
+	rel="stylesheet">
+<link href="${pageContext.request.contextPath}/css/style.css"
+	rel="stylesheet">
 </head>
 <body>
 
-<!-- ===== NAV ===== -->
-<nav class="navbar navbar-expand-md navbar-custom py-3">
-  <div class="container">
-    <a class="navbar-brand brand" href="index.html">ANI<span>VERSE</span></a>
-    <div class="d-flex align-items-center gap-2 order-md-3">
-      <button class="spec-toggle" id="specToggleBtn" onclick="toggleSpec()" title="画面に要件ID(例: ANI-001)を表示します">⌘ 仕様書オーバーレイ</button>
-      <a class="btn btn-outline-soft btn-sm" href="login/login.html">ログイン</a>
-      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMain" style="filter:invert(1);">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-    </div>
-    <div class="collapse navbar-collapse order-md-2" id="navMain">
-      <ul class="navbar-nav mx-md-3 gap-1 mt-3 mt-md-0">
-        <li class="nav-item"><a class="nav-link nav-link-custom active" href="index.html">ホーム</a></li>
-        <li class="nav-item"><a class="nav-link nav-link-custom" href="list/list.html">アニメ一覧</a></li>
-        <li class="nav-item"><a class="nav-link nav-link-custom" href="recommend/recommend.html">おすすめ</a></li>
-        <li class="nav-item"><a class="nav-link nav-link-custom" href="mypage/mypage.html">マイページ</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
+	<%@ include file="/common/header.jsp"%>
 
-<!-- ===== HERO ===== -->
-<section class="hero req-anchor">
-  <span class="req-id">SYS-001 · ANI-002</span>
-  <div class="container text-center">
-    <h1 class="display">タグで見つける、あなただけのアニメ</h1>
-    <p class="lead mb-4">お気に入り作品のタグを分析して、似た好みのアニメをおすすめします。</p>
-    <form class="mx-auto d-flex search-pill" style="max-width:560px;" action="list/list.html" method="get">
-      <input type="text" name="title" placeholder="タイトルで検索(例:魔法、ロボット、学園もの...)">
-      <button class="btn btn-accent" type="submit">検索</button>
-    </form>
-    <div class="mt-4">
-      <span class="text-muted small me-2">人気タグ</span>
-      <a class="tag-chip" href="list/list.html?tag=ファンタジー">#ファンタジー</a>
-      <a class="tag-chip" href="list/list.html?tag=ロボット">#ロボット</a>
-      <a class="tag-chip" href="list/list.html?tag=学園">#学園</a>
-      <a class="tag-chip" href="list/list.html?tag=異世界">#異世界</a>
-      <a class="tag-chip" href="list/list.html?tag=スポーツ">#スポーツ</a>
-    </div>
-  </div>
-</section>
+	<section class="hero">
+		<div class="container text-center">
+			<h1 class="display">タグで見つける、あなただけのアニメ</h1>
+			<p class="lead mb-4">気になるタイトルを検索して、お気に入りに追加してみましょう。</p>
 
-<!-- ===== 인기 작품 ===== -->
-<section class="section container req-anchor">
-  <span class="req-id">ANI-001</span>
-  <div class="d-flex justify-content-between align-items-end mb-3">
-    <h3>今、人気の作品</h3>
-    <a class="text-muted small" href="list/list.html">すべて見る →</a>
-  </div>
-  <div class="row g-3" id="homePopularGrid"></div>
-</section>
+			<form class="mx-auto d-flex search-pill" style="max-width: 560px;"
+				action="${pageContext.request.contextPath}/anime/search.do"
+				method="get">
+				<input type="text" name="title"
+					placeholder="タイトルで検索(例:魔法、ロボット、学園もの...)">
+				<button class="btn btn-accent" type="submit">検索</button>
+			</form>
+		</div>
+	</section>
 
-<!-- ===== 추천 CTA ===== -->
-<section class="section container req-anchor">
-  <span class="req-id">REC-001</span>
-  <div class="surface p-4 p-md-5 d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
-    <div>
-      <h4 class="mb-1">お気に入りが増えるほど、おすすめが正確になります</h4>
-      <p class="text-muted mb-0">ログインして気に入ったアニメをお気に入りに追加しましょう。</p>
-    </div>
-    <a class="btn btn-accent flex-shrink-0" href="recommend/recommend.html">おすすめを見る</a>
-  </div>
-</section>
+	<section class="section container">
+		<div class="d-flex justify-content-between align-items-end mb-3">
+			<h3>今、人気の作品</h3>
+			<a class="text-muted small"
+				href="${pageContext.request.contextPath}/anime/list.do">すべて見る →</a>
+		</div>
 
-<footer class="footer text-center req-anchor">
-  <span class="req-id" style="position:static; display:inline-block; margin-bottom:.5rem;">SYS-002</span>
-  <div>ANIVERSE — アニメおすすめサイト プロジェクト · JSP + Oracle + Bootstrap</div>
-  <div class="mono mt-1" style="font-size:.7rem;">この画面はフロントエンドのプロトタイプであり、データはKaggleのanime-offline-database.jsonlを参考にしたサンプルです。</div>
-</footer>
+		<c:choose>
+			<c:when test="${empty popularList}">
+				<div class="empty-state">まだお気に入りに追加された作品がありません。</div>
+			</c:when>
+			<c:otherwise>
+				<div class="row g-3">
+					<c:forEach var="anime" items="${popularList}" varStatus="status"
+						end="7">
+						<div class="col-6 col-md-4 col-lg-3">
+							<a class="anime-card"
+								href="${pageContext.request.contextPath}/anime/detail.do?animeId=${anime.animeId}">
+								<div class="poster"
+									style="background-image:url('${anime.thumbnail}'); background-size:cover; background-position:center;">
+									<span class="mono"
+										style="position: absolute; top: .5rem; left: .5rem; background: rgba(20,17,31,.75); color: var(--accent-2); font-size: .72rem; font-weight: 600; padding: .15rem .5rem; border-radius: 6px;">${status.index + 1}位</span>
+									<span class="score-badge">★ ${anime.score}</span>
+									<div class="poster-title">${anime.title}</div>
+								</div>
+								<div class="meta">${anime.type} · ${anime.year}年 ·
+									❤️ ${anime.favoriteCount}</div>
+							</a>
+						</div>
+					</c:forEach>
+				</div>
+			</c:otherwise>
+		</c:choose>
+	</section>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
-<script src="js/anime-data.js"></script>
-<script>
-  // 인기 작품(평점 상위 8개) 렌더링 — 이 페이지에서는 로그인 상태가 아니므로 찜 버튼은 표시만 하고
-  // 클릭 시 로그인 페이지로 안내합니다. (FAV-001: 실제 구현 시 로그인 세션 여부로 분기)
-  function onFavClick(id){
-    location.href = "login/login.html";
-  }
-  const popular = [...ANIME].sort((a,b)=>b.score-a.score).slice(0,8);
-  document.getElementById("homePopularGrid").innerHTML =
-    popular.map(a=>cardHTML(a, "detail/detail.html", false)).join("");
-</script>
+	<div class="container text-center mono"
+		style="font-size: .7rem; color: var(--text-muted); margin-top: -1rem; margin-bottom: 1.5rem;">お気に入り数をもとに人気作品を表示しています。</div>
+
+	<%@ include file="/common/footer.jsp"%>
 </body>
 </html>

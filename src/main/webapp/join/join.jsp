@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%
+    request.setAttribute("activePage", "login");
+%>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -13,39 +16,12 @@
 <link
 	href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap"
 	rel="stylesheet">
-<link href="../css/style.css" rel="stylesheet">
+<link href="${pageContext.request.contextPath}/css/style.css"
+	rel="stylesheet">
 </head>
 <body>
 
-	<!-- ===== NAV ===== -->
-	<nav class="navbar navbar-expand-md navbar-custom py-3">
-		<div class="container">
-			<a class="navbar-brand brand" href="../index.html">ANI<span>VERSE</span></a>
-			<div class="d-flex align-items-center gap-2 order-md-3">
-				<button class="spec-toggle" id="specToggleBtn"
-					onclick="toggleSpec()" title="画面に要件ID(例: USER-001)を表示します">⌘
-					仕様書オーバーレイ</button>
-				<a class="btn btn-outline-soft btn-sm" href="../login/login.jsp">ログイン</a>
-				<button class="navbar-toggler border-0" type="button"
-					data-bs-toggle="collapse" data-bs-target="#navMain"
-					style="filter: invert(1);">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-			</div>
-			<div class="collapse navbar-collapse order-md-2" id="navMain">
-				<ul class="navbar-nav mx-md-3 gap-1 mt-3 mt-md-0">
-					<li class="nav-item"><a class="nav-link nav-link-custom"
-						href="../index.html">ホーム</a></li>
-					<li class="nav-item"><a class="nav-link nav-link-custom"
-						href="../list/list.html">アニメ一覧</a></li>
-					<li class="nav-item"><a class="nav-link nav-link-custom"
-						href="../recommend/recommend.html">おすすめ</a></li>
-					<li class="nav-item"><a class="nav-link nav-link-custom"
-						href="${pageContext.request.contextPath}/favorite/list.do?userId=${sessionScope.userid}">マイページ</a></li>
-				</ul>
-			</div>
-		</div>
-	</nav>
+	<%@ include file="/common/header.jsp"%>
 
 	<section class="section container req-anchor" style="max-width: 480px;">
 		<span class="req-id">USER-001 · USER-002 · USER-003 · USER-004</span>
@@ -129,34 +105,24 @@
 
 			<!-- SOCIAL-001 : 구글/라인으로 가입 (처음 로그인하는 순간 자동으로 회원가입까지 처리된다) -->
 			<div class="d-flex align-items-center gap-2 my-3">
-				<hr style="flex: 1; border-color: rgba(255,255,255,.15);">
+				<hr style="flex: 1; border-color: rgba(255, 255, 255, .15);">
 				<span class="text-muted small">または</span>
-				<hr style="flex: 1; border-color: rgba(255,255,255,.15);">
+				<hr style="flex: 1; border-color: rgba(255, 255, 255, .15);">
 			</div>
 			<div class="d-flex flex-column gap-2">
 				<a href="${pageContext.request.contextPath}/oauth/google"
 					class="btn w-100 d-flex align-items-center justify-content-center gap-2"
 					style="background: #fff; color: #3c4043; border: 1px solid #dadce0; font-weight: 500;">
 					<span style="font-weight: 700; color: #4285F4;">G</span> Googleで登録
-				</a>
-				<a href="${pageContext.request.contextPath}/oauth/line"
+				</a> <a href="${pageContext.request.contextPath}/oauth/line"
 					class="btn w-100 d-flex align-items-center justify-content-center gap-2"
 					style="background: #06C755; color: #fff; border: none; font-weight: 500;">
-					LINEで登録
-				</a>
+					LINEで登録 </a>
 			</div>
 		</div>
 	</section>
 
-	<footer class="footer text-center req-anchor">
-		<span class="req-id"
-			style="position: static; display: inline-block; margin-bottom: .5rem;">SYS-002</span>
-		<div>ANIVERSE — アニメおすすめサイト プロジェクト · JSP + Oracle + Bootstrap</div>
-	</footer>
-
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
-	<script src="../js/anime-data.js"></script>
+	<%@ include file="/common/footer.jsp"%>
 	<script>
     const CTX = "${pageContext.request.contextPath}";
 
@@ -302,9 +268,6 @@
       const nicknameVal = document.getElementById("joinNick").value.trim();
       const email = document.getElementById("joinEmail").value.trim();
 
-      // ブラウザ標準の入力チェックポップアップ(「この入力項目を入力してください」等)は
-      // ブラウザの言語設定によって表示言語が変わってしまうため、novalidateで無効化し
-      // ここで全て日本語のメッセージを出す。
       if(!id){
         alert("IDを入力してください。");
         return false;
