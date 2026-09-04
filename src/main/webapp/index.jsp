@@ -2,6 +2,9 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%
+    request.setAttribute("activePage", "home");
+%>
 
 <!DOCTYPE html>
 <html lang="ja">
@@ -19,63 +22,8 @@
 	rel="stylesheet">
 </head>
 <body>
-
-	<script>
-		if (localStorage.getItem("aniverseTheme") === "light") {
-			document.body.classList.add("light-mode");
-		}
-	</script>
-
-	<nav class="navbar navbar-expand-md navbar-custom py-3">
-		<div class="container">
-
-			<a class="navbar-brand brand"
-				href="${pageContext.request.contextPath}/main.do"> ANI<span>VERSE</span>
-			</a>
-
-			<div class="d-flex align-items-center gap-2 order-md-3">
-				<c:choose>
-					<c:when test="${not empty sessionScope.userid}">
-						<span class="text-muted small me-2 d-none d-sm-inline">${sessionScope.nickname}さん</span>
-						<a class="btn btn-outline-soft btn-sm"
-							href="${pageContext.request.contextPath}/member/logout.do">
-							ログアウト </a>
-					</c:when>
-					<c:otherwise>
-						<a class="btn btn-outline-soft btn-sm"
-							href="${pageContext.request.contextPath}/member/loginForm.do">
-							ログイン </a>
-					</c:otherwise>
-				</c:choose>
-				<button class="btn btn-outline-soft btn-sm" type="button"
-					id="themeToggleBtn" onclick="toggleTheme()"
-					title="ダークモード/ライトモード切り替え">🌙</button>
-				<button class="navbar-toggler border-0" type="button"
-					data-bs-toggle="collapse" data-bs-target="#navMain"
-					style="filter: invert(1);">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-			</div>
-
-			<div class="collapse navbar-collapse order-md-2" id="navMain">
-				<ul class="navbar-nav mx-md-3 gap-1 mt-3 mt-md-0">
-					<li class="nav-item"><a
-						class="nav-link nav-link-custom active"
-						href="${pageContext.request.contextPath}/main.do"> ホーム </a></li>
-					<li class="nav-item"><a class="nav-link nav-link-custom"
-						href="${pageContext.request.contextPath}/anime/list.do"> アニメ一覧
-					</a></li>
-					<li class="nav-item"><a class="nav-link nav-link-custom"
-						href="${pageContext.request.contextPath}/recommend/recommend.html">
-							おすすめ </a></li>
-					<li class="nav-item"><a class="nav-link nav-link-custom"
-						href="${pageContext.request.contextPath}/favorite/list.do?userId=${sessionScope.userid}">
-							マイページ </a></li>
-				</ul>
-			</div>
-
-		</div>
-	</nav>
+	
+	<%@ include file="/common/header.jsp"%>
 
 	<section class="hero">
 		<div class="container text-center">
@@ -98,68 +46,38 @@
 			<a class="text-muted small"
 				href="${pageContext.request.contextPath}/anime/list.do">すべて見る →</a>
 		</div>
-		<div class="row g-3">
 
-			<c:if test="${empty popularList}">검색된 리스트가 없습니다</c:if>
-
-
-
-			<c:forEach var="anime" items="${popularList}" varStatus="status"
-				end="7">
-
-				<div class="col-6 col-md-4 col-lg-3">
-
-					<div class="surface h-100 p-3">
-
-						<!-- 순위 -->
-						<div class="mono text-muted small mb-2">${status.index + 1}位
+		<c:choose>
+			<c:when test="${empty popularList}">
+				<div class="empty-state">まだお気に入りに追加された作品がありません。</div>
+			</c:when>
+			<c:otherwise>
+				<div class="row g-3">
+					<c:forEach var="anime" items="${popularList}" varStatus="status"
+						end="7">
+						<div class="col-6 col-md-4 col-lg-3">
+							<a class="anime-card"
+								href="${pageContext.request.contextPath}/anime/detail.do?animeId=${anime.animeId}">
+								<div class="poster"
+									style="background-image:url('${anime.thumbnail}'); background-size:cover; background-position:center;">
+									<span class="mono"
+										style="position: absolute; top: .5rem; left: .5rem; background: rgba(20,17,31,.75); color: var(--accent-2); font-size: .72rem; font-weight: 600; padding: .15rem .5rem; border-radius: 6px;">${status.index + 1}位</span>
+									<span class="score-badge">★ ${anime.score}</span>
+									<div class="poster-title">${anime.title}</div>
+								</div>
+								<div class="meta">${anime.type} · ${anime.year}年 ·
+									❤️ ${anime.favoriteCount}</div>
+							</a>
 						</div>
-
-						<!-- 썸네일 -->
-						<c:if test="${not empty anime.thumbnail}">
-							<img src="${anime.thumbnail}" alt="${anime.title}"
-								class="img-fluid rounded mb-3">
-						</c:if>
-
-						<!-- 제목 -->
-						<h5>${anime.title}</h5>
-
-						<!-- 정보 -->
-						<div class="text-muted small mb-3">⭐ ${anime.score} &nbsp;
-							❤️ ${anime.favoriteCount}</div>
-
-						<!-- 상세 페이지 -->
-						<a class="btn btn-outline-soft btn-sm"
-							href="${pageContext.request.contextPath}/anime/detail.do?animeId=${anime.animeId}">
-							詳細を見る </a>
-
-					</div>
-
+					</c:forEach>
 				</div>
-
-			</c:forEach>
-
-		</div>
+			</c:otherwise>
+		</c:choose>
 	</section>
 
-	<footer class="footer text-center">
-		<div>ANIVERSE — アニメおすすめサイト プロジェクト · JSP + Oracle + Bootstrap</div>
-		<div class="mono mt-1" style="font-size: .7rem;">お気に入り数をもとに人気作品を表示しています。</div>
-	</footer>
+	<div class="container text-center mono"
+		style="font-size: .7rem; color: var(--text-muted); margin-top: -1rem; margin-bottom: 1.5rem;">お気に入り数をもとに人気作品を表示しています。</div>
 
-
+	<%@ include file="/common/footer.jsp"%>
 </body>
-<script>
-	var themeBtn = document.getElementById("themeToggleBtn");
-	function syncThemeIcon() {
-		themeBtn.textContent = document.body.classList.contains("light-mode") ? "☀️"
-				: "🌙";
-	}
-	function toggleTheme() {
-		document.body.classList.toggle("light-mode");
-		var isLight = document.body.classList.contains("light-mode");
-		localStorage.setItem("aniverseTheme", isLight ? "light" : "dark");
-		syncThemeIcon();
-	}
-</script>
 </html>

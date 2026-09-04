@@ -45,27 +45,29 @@ public class FavoriteController extends HttpServlet {
 
 		String page = null;
 
-		switch(action) {
+		switch (action) {
 		case "/add.do":
 			new FavoriteAddService().doCommand(request, response);
-			break;
+			response.sendRedirect(request.getContextPath() + "/anime/detail.do?animeId=" + request.getParameter("animeId"));
+			return;
 		case "/delete.do":
 			new FavoriteDeleteService().doCommand(request, response);
-			break;
+			response.sendRedirect(request.getContextPath() + "/favorite/list.do?userId=" + request.getParameter("userId"));
+			return;
 		case "/list.do":
 			HttpSession session = request.getSession(false);
-		    Object sessionUserId = (session != null) ? session.getAttribute("userid") : null;
-		    if (sessionUserId == null) {
-		        response.sendRedirect(request.getContextPath() + "/member/loginForm.do");
-		        return;
-		    }
-		    new FavoriteListService().doCommand(request, response);
-		    page = "/mypage/mypage.jsp";
-		    break;
+			Object sessionUserId = (session != null) ? session.getAttribute("userid") : null;
+			if (sessionUserId == null) {
+				response.sendRedirect(request.getContextPath() + "/member/loginForm.do");
+				return;
+			}
+			new FavoriteListService().doCommand(request, response);
+			page = "/mypage/mypage.jsp";
+			break;
 		}
-		
-		if(page != null) {
-		    request.getRequestDispatcher(page).forward(request, response);
+
+		if (page != null) {
+			request.getRequestDispatcher(page).forward(request, response);
 		}
 	}
 }
