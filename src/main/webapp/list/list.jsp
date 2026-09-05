@@ -23,6 +23,11 @@ if (sort == null) {
 List<AnimeDTO> list = (List<AnimeDTO>) request.getAttribute("list");
 
 request.setAttribute("activePage", "list");
+
+// 찜/찜 해제 후 상세페이지로 넘어가지 않고 이 목록 화면으로 그대로 돌아오기 위한 복귀 주소
+String backUrl = request.getContextPath() + "/anime/list.do"
+		+ (request.getQueryString() != null ? "?" + request.getQueryString() : "");
+String encodedBack = java.net.URLEncoder.encode(backUrl, "UTF-8");
 %>
 <!DOCTYPE html>
 <html lang="ja">
@@ -122,16 +127,39 @@ request.setAttribute("activePage", "list");
 				<div class="row g-3">
 					<c:forEach var="anime" items="${list}">
 						<div class="col-6 col-md-4 col-lg-3">
-							<a class="anime-card"
-								href="${pageContext.request.contextPath}/anime/detail.do?animeId=${anime.animeId}">
-								<div class="poster"
-									style="background-image:url('${anime.thumbnail}'); background-size:cover; background-position:center;">
-									<span class="score-badge">★ ${anime.score}</span>
-									<div class="poster-title">${anime.title}</div>
-								</div>
-								<div class="meta">${anime.type} · ${anime.year}年 ·
-									${anime.episodes}話</div>
-							</a>
+							<div style="position: relative;">
+								<a class="anime-card"
+									href="${pageContext.request.contextPath}/anime/detail.do?animeId=${anime.animeId}">
+									<div class="poster"
+										style="background-image:url('${anime.thumbnail}'); background-size:cover; background-position:center;">
+										<span class="score-badge">★ ${anime.score}</span>
+										<div class="poster-title">${anime.title}</div>
+									</div>
+									<div class="meta">${anime.type} · ${anime.year}年 ·
+										${anime.episodes}話</div>
+								</a>
+
+								<!-- FAV-001/004 : 목록에서 바로 찜하기/찜 해제 -->
+								<c:choose>
+									<c:when test="${not empty sessionScope.userid}">
+										<c:choose>
+											<c:when test="${favIds.contains(anime.animeId)}">
+												<a class="card-fav-btn active" title="お気に入り解除"
+													onclick="return confirm('お気に入りから削除しますか？');"
+													href="${pageContext.request.contextPath}/favorite/delete.do?userId=${sessionScope.userid}&amp;animeId=${anime.animeId}&amp;back=<%=encodedBack%>">♥</a>
+											</c:when>
+											<c:otherwise>
+												<a class="card-fav-btn" title="お気に入りに追加"
+													href="${pageContext.request.contextPath}/favorite/add.do?animeId=${anime.animeId}&amp;userId=${sessionScope.userid}&amp;back=<%=encodedBack%>">♡</a>
+											</c:otherwise>
+										</c:choose>
+									</c:when>
+									<c:otherwise>
+										<a class="card-fav-btn" title="ログインしてお気に入りに追加"
+											href="${pageContext.request.contextPath}/member/loginForm.do">♡</a>
+									</c:otherwise>
+								</c:choose>
+							</div>
 						</div>
 					</c:forEach>
 				</div>

@@ -9,12 +9,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <%
-	// MY-001 : 회원정보 조회. 로그인 사용자(userid)를 기준으로 USER 테이블에서 최신 프로필을 조회한다.
-	String loginId = (String) session.getAttribute("userid");
-	UserDTO loginUser = (loginId != null) ? new UserDAO().getUserById(loginId) : null;
-	request.setAttribute("loginUser", loginUser);
+// MY-001 : 회원정보 조회. 로그인 사용자(userid)를 기준으로 USER 테이블에서 최신 프로필을 조회한다.
+String loginId = (String) session.getAttribute("userid");
+UserDTO loginUser = (loginId != null) ? new UserDAO().getUserById(loginId) : null;
+request.setAttribute("loginUser", loginUser);
 
-    request.setAttribute("activePage", "mypage");
+request.setAttribute("activePage", "mypage");
 %>
 
 <!DOCTYPE html>
@@ -66,18 +66,19 @@
 			</div>
 
 			<!-- MY-002 : 회원정보 수정 (선택 기능) -->
-			<form id="editForm" novalidate style="display: none;" class="row g-2 mt-3"
+			<form id="editForm" novalidate style="display: none;"
+				class="row g-2 mt-3"
 				action="${pageContext.request.contextPath}/member/update.do"
 				method="post" onsubmit="return validateEditForm()">
 				<div class="col-md-6">
-					<label class="form-label-custom">ニックネーム</label> <input
-						type="text" class="form-control form-control-custom"
-						name="nickname" id="editNickname" value="${loginUser.nickname}" required>
+					<label class="form-label-custom">ニックネーム</label> <input type="text"
+						class="form-control form-control-custom" name="nickname"
+						id="editNickname" value="${loginUser.nickname}" required>
 				</div>
 				<div class="col-md-6">
 					<label class="form-label-custom">メールアドレス</label> <input
-						type="email" class="form-control form-control-custom"
-						name="email" id="editEmail" value="${loginUser.email}" required>
+						type="email" class="form-control form-control-custom" name="email"
+						id="editEmail" value="${loginUser.email}" required>
 				</div>
 				<div class="col-12">
 					<button class="btn btn-accent btn-sm mt-2" type="submit">保存する</button>
@@ -91,7 +92,8 @@
 			<c:when test="${empty list}">
 				<div class="empty-state">
 					まだお気に入り作品がありません。<br> <a class="btn btn-accent mt-3"
-						href="${pageContext.request.contextPath}/anime/list.do">アニメを見る →</a>
+						href="${pageContext.request.contextPath}/anime/list.do">アニメを見る
+						→</a>
 				</div>
 			</c:when>
 			<c:otherwise>
@@ -108,8 +110,9 @@
 										<div class="poster-title">${anime.title}</div>
 									</div>
 
-									<div class="meta">${anime.type} · ${anime.year}年 · 全${anime.episodes}話</div>
-								</a> <a class="card-fav-btn" title="お気に入り解除"
+									<div class="meta">${anime.type}· ${anime.year}年 ·
+										全${anime.episodes}話</div>
+								</a> <a class="card-fav-btn active" title="お気に入り解除"
 									onclick="return confirm('お気に入りから削除しますか？');"
 									href="${pageContext.request.contextPath}/favorite/delete.do?userId=${sessionScope.userid}&amp;animeId=${anime.animeId}">♥</a>
 							</div>
@@ -122,24 +125,26 @@
 
 	<%@ include file="/common/footer.jsp"%>
 	<script>
-    // MY-002 : 회원정보 수정 폼 표시/숨김 토글
-    function toggleEditForm(){
-      const form = document.getElementById("editForm");
-      form.style.display = (form.style.display === "none") ? "block" : "none";
-    }
+		// MY-002 : 회원정보 수정 폼 표시/숨김 토글
+		function toggleEditForm() {
+			const form = document.getElementById("editForm");
+			form.style.display = (form.style.display === "none") ? "block"
+					: "none";
+		}
 
-    // ブラウザ標準の入力チェックポップアップは言語がブラウザ設定に依存するため、
-    // novalidateで無効化し、ここで日本語のメッセージを出す。
-    function validateEditForm(){
-      const nickname = document.getElementById("editNickname").value.trim();
-      const email = document.getElementById("editEmail").value.trim();
+		// ブラウザ標準の入力チェックポップアップは言語がブラウザ設定に依存するため、
+		// novalidateで無効化し、ここで日本語のメッセージを出す。
+		function validateEditForm() {
+			const nickname = document.getElementById("editNickname").value
+					.trim();
+			const email = document.getElementById("editEmail").value.trim();
 
-      if(!nickname || !email){
-        alert("ニックネームとメールアドレスを入力してください。");
-        return false;
-      }
-      return true;
-    }
-  </script>
+			if (!nickname || !email) {
+				alert("ニックネームとメールアドレスを入力してください。");
+				return false;
+			}
+			return true;
+		}
+	</script>
 </body>
 </html>

@@ -4,6 +4,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <%@ page import="java.util.List"%>
+<%@ page import="java.util.Set"%>
 <%@ page import="model.AnimeDTO"%>
 
 <%
@@ -24,10 +25,16 @@ if (sort == null) {
 }
 
 List<AnimeDTO> list = (List<AnimeDTO>) request.getAttribute("list");
+Set<Integer> favIds = (Set<Integer>) request.getAttribute("favIds");
+String loginUserId = (String) session.getAttribute("userid");
 
 
 request.setAttribute("activePage", "list");
 
+// 찜/찜 해제 후 상세페이지로 넘어가지 않고 이 검색 결과 화면(검색 조건 포함)으로 그대로 돌아오기 위한 복귀 주소
+String backUrl = request.getContextPath() + "/anime/search.do"
+		+ (request.getQueryString() != null ? "?" + request.getQueryString() : "");
+String encodedBack = java.net.URLEncoder.encode(backUrl, "UTF-8");
 %>
 
 <!DOCTYPE html>
@@ -126,18 +133,42 @@ request.setAttribute("activePage", "list");
 		<div class="row g-3">
 			<%
 			for (AnimeDTO anime : list) {
+				boolean isFav = (favIds != null && favIds.contains(anime.getAnimeId()));
 			%>
 			<div class="col-6 col-md-4 col-lg-3">
-				<a class="anime-card"
-					href="<%=request.getContextPath()%>/anime/detail.do?animeId=<%=anime.getAnimeId()%>">
-					<div class="poster"
-						style="background-image:url('<%=anime.getThumbnail() != null ? anime.getThumbnail() : ""%>'); background-size:cover; background-position:center;">
-						<span class="score-badge">★ <%=anime.getScore()%></span>
-						<div class="poster-title"><%=anime.getTitle()%></div>
-					</div>
-					<div class="meta"><%=anime.getType()%> · <%=anime.getYear()%>年
-						· <%=anime.getEpisodes()%>話</div>
-				</a>
+				<div style="position: relative;">
+					<a class="anime-card"
+						href="<%=request.getContextPath()%>/anime/detail.do?animeId=<%=anime.getAnimeId()%>">
+						<div class="poster"
+							style="background-image:url('<%=anime.getThumbnail() != null ? anime.getThumbnail() : ""%>'); background-size:cover; background-position:center;">
+							<span class="score-badge">★ <%=anime.getScore()%></span>
+							<div class="poster-title"><%=anime.getTitle()%></div>
+						</div>
+						<div class="meta"><%=anime.getType()%> · <%=anime.getYear()%>年
+							· <%=anime.getEpisodes()%>話</div>
+					</a>
+
+					<%
+					// FAV-001/004 : 검색 결과에서 바로 찜하기/찜 해제
+					if (loginUserId == null) {
+					%>
+					<a class="card-fav-btn" title="ログインしてお気に入りに追加"
+						href="<%=request.getContextPath()%>/member/loginForm.do">♡</a>
+					<%
+					} else if (isFav) {
+					%>
+					<a class="card-fav-btn active" title="お気に入り解除"
+						onclick="return confirm('お気に入りから削除しますか？');"
+						href="<%=request.getContextPath()%>/favorite/delete.do?userId=<%=loginUserId%>&amp;animeId=<%=anime.getAnimeId()%>&amp;back=<%=encodedBack%>">♥</a>
+					<%
+					} else {
+					%>
+					<a class="card-fav-btn" title="お気に入りに追加"
+						href="<%=request.getContextPath()%>/favorite/add.do?animeId=<%=anime.getAnimeId()%>&amp;userId=<%=loginUserId%>&amp;back=<%=encodedBack%>">♡</a>
+					<%
+					}
+					%>
+				</div>
 			</div>
 			<%
 			}
