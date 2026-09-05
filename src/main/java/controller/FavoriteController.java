@@ -48,11 +48,11 @@ public class FavoriteController extends HttpServlet {
 		switch (action) {
 		case "/add.do":
 			new FavoriteAddService().doCommand(request, response);
-			response.sendRedirect(request.getContextPath() + "/anime/detail.do?animeId=" + request.getParameter("animeId"));
+			response.sendRedirect(redirectBackOrDefault(request, request.getContextPath() + "/anime/detail.do?animeId=" + request.getParameter("animeId")));
 			return;
 		case "/delete.do":
 			new FavoriteDeleteService().doCommand(request, response);
-			response.sendRedirect(request.getContextPath() + "/favorite/list.do?userId=" + request.getParameter("userId"));
+			response.sendRedirect(redirectBackOrDefault(request, request.getContextPath() + "/favorite/list.do?userId=" + request.getParameter("userId")));
 			return;
 		case "/list.do":
 			HttpSession session = request.getSession(false);
@@ -69,5 +69,19 @@ public class FavoriteController extends HttpServlet {
 		if (page != null) {
 			request.getRequestDispatcher(page).forward(request, response);
 		}
+	}
+	
+	
+	private String redirectBackOrDefault(HttpServletRequest request, String fallback) {
+		String back = request.getParameter("back");
+		if (back != null && !back.isEmpty()) {
+			try {
+				return java.net.URLDecoder.decode(back, "UTF-8");
+			} catch (Exception e) {
+				// 디코딩 실패 시 무시하고 아래 로직으로 진행
+			}
+		}
+		String referer = request.getHeader("Referer");
+		return (referer != null && !referer.isEmpty()) ? referer : fallback;
 	}
 }

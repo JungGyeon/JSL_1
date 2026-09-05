@@ -14,6 +14,16 @@ public class AnimeDTO {
 	private double score;
 	private int durationValue;
 	private String durationUnit;
+	private int matchCount;
+	
+	public int getMatchCount() {
+		return matchCount;
+	}
+
+	public void setMatchCount(int matchCount) {
+		this.matchCount = matchCount;
+	}
+
 	public int getFavoriteCount() {
 		return favoriteCount;
 	}

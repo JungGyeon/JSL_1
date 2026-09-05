@@ -62,8 +62,9 @@
 				<li class="nav-item"><a
 					class="nav-link nav-link-custom <%="list".equals(activePage) ? "active" : ""%>"
 					href="${pageContext.request.contextPath}/anime/list.do">アニメ一覧</a></li>
-				<li class="nav-item"><a class="nav-link nav-link-custom"
-					href="${pageContext.request.contextPath}/recommend/recommend.html">おすすめ</a></li>
+				<li class="nav-item"><a
+					class="nav-link nav-link-custom <%="recommend".equals(activePage) ? "active" : ""%>"
+					href="${pageContext.request.contextPath}/recommend/list.do">おすすめ</a></li>
 				<li class="nav-item"><a
 					class="nav-link nav-link-custom <%="mypage".equals(activePage) ? "active" : ""%>"
 					href="${pageContext.request.contextPath}/favorite/list.do?userId=${sessionScope.userid}">マイページ</a></li>

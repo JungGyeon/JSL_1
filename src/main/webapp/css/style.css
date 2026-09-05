@@ -153,12 +153,13 @@ body.spec-mode .req-id{display:inline-block;}
   position:absolute; top:.5rem; left:.5rem;
   width:30px; height:30px; border-radius:50%;
   background:rgba(20,17,31,.75);
-  color:var(--accent);
+  color:#fff;
   font-size:.9rem; text-decoration:none;
   display:flex; align-items:center; justify-content:center;
   cursor:pointer; z-index:2;
 }
-.card-fav-btn:hover{ background:rgba(20,17,31,.9); color:var(--accent); }
+.card-fav-btn.active{ color:var(--accent); }
+.card-fav-btn:hover{ background:rgba(20,17,31,.9); }
 .poster-title{
   position:relative; z-index:2; width:100%;
   background:linear-gradient(0deg, rgba(0,0,0,.75), transparent);

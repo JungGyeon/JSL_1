@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import util.DBManager;
 
@@ -106,6 +108,64 @@ public class FavoriteDAO {
 		}
 
 		return list;
+	}
+	
+	public boolean isFavorite(String userId, int animeId) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		String sql = "SELECT 1 FROM FAVORITE WHERE USER_ID = ? AND ANIME_ID = ?";
+
+		boolean result = false;
+
+		try {
+			conn = DBManager.getInstance();
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setString(1, userId);
+			pstmt.setInt(2, animeId);
+
+			rs = pstmt.executeQuery();
+			result = rs.next();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBManager.close(rs, pstmt, conn);
+		}
+
+		return result;
+	}
+
+	public Set<Integer> getFavoriteAnimeIds(String userId) {
+		Set<Integer> ids = new HashSet<Integer>();
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		String sql = "SELECT ANIME_ID FROM FAVORITE WHERE USER_ID = ?";
+
+		try {
+			conn = DBManager.getInstance();
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setString(1, userId);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				ids.add(rs.getInt("anime_id"));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBManager.close(rs, pstmt, conn);
+		}
+
+		return ids;
 	}
 	
 }
