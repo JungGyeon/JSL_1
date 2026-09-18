@@ -7,10 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import model.BoardDAO;
-import model.BoardDTO;
+import model.CommentDAO;
+import model.CommentDTO;
 
-public class BoardWriteService implements Command {
+public class CommentWriteService implements Command {
 
     @Override
     public void doCommand(HttpServletRequest request, HttpServletResponse response)
@@ -24,23 +24,25 @@ public class BoardWriteService implements Command {
         String userId = (String) session.getAttribute("userid");
         String nickname = (String) session.getAttribute("nickname");
 
-        // 작성한 게시글 정보 가져오기
-        String title = request.getParameter("title");
+        // 댓글 정보 가져오기
+        String boardIdStr = request.getParameter("boardId");
         String content = request.getParameter("content");
 
-        // DTO 생성
-        BoardDTO dto = new BoardDTO();
+        int boardId = Integer.parseInt(boardIdStr);
 
+        // DTO 생성
+        CommentDTO dto = new CommentDTO();
+
+        dto.setBoardId(boardId);
         dto.setUserId(userId);
         dto.setNickname(nickname);
-        dto.setTitle(title);
         dto.setContent(content);
 
         // DAO를 통해 DB에 저장
-        BoardDAO dao = new BoardDAO();
+        CommentDAO dao = new CommentDAO();
 
-        int result = dao.insertBoard(dto);
+        dao.insertComment(dto);
 
-        System.out.println("게시글 등록 결과: " + result);
+        System.out.println("댓글 등록 완료");
     }
 }

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>掲示板 — ANIVERSE</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="../css/style.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav class="navbar navbar-expand-md navbar-custom py-3">
+  <div class="container">
+    <a class="navbar-brand brand" href="../index.html">ANI<span>VERSE</span></a>
+
+    <div class="d-flex align-items-center gap-2 order-md-3">
+      <button class="spec-toggle" id="specToggleBtn" type="button"
+        onclick="toggleSpec()" title="画面に要件ID(例: ANI-001)を表示します">⌘ 仕様書オーバーレイ</button>
+      <a class="btn btn-outline-soft btn-sm" href="../login/login.html">ログイン</a>
+      <button class="btn btn-outline-soft btn-sm" type="button"
+        id="themeToggleBtn" onclick="toggleTheme()" title="ダークモード/ライトモード切り替え">🌙</button>
+      <button class="navbar-toggler border-0" type="button"
+        data-bs-toggle="collapse" data-bs-target="#navMain" style="filter:invert(1);">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+
+    <div class="collapse navbar-collapse order-md-2" id="navMain">
+      <ul class="navbar-nav mx-md-3 gap-1 mt-3 mt-md-0">
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="../index.html">ホーム</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="../list/list.html">アニメ一覧</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="../recommend/recommend.html">おすすめ</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom active" href="board.html">掲示板</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom" href="../mypage/mypage.html">マイページ</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<section class="sub-hero">
+  <div class="container">
+    <h2 class="mb-0">掲示板</h2>
+  </div>
+</section>
+
+<section class="section container req-anchor">
+  <span class="req-id">BOARD-001~</span>
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <span class="text-muted small">全3件</span>
+    </div>
+    <a class="btn btn-accent" href="write.html">投稿する</a>
+  </div>
+
+  <div class="surface p-0 overflow-hidden">
+    <div class="table-responsive">
+      <table class="table table-dark table-hover align-middle mb-0">
+        <thead>
+          <tr>
+            <th class="text-center" style="width:80px;">番号</th>
+            <th>タイトル</th>
+            <th class="text-center" style="width:120px;">作成者</th>
+            <th class="text-center" style="width:80px;">いいね</th>
+            <th class="text-center" style="width:80px;">わるいね</th>
+            <th class="text-center" style="width:80px;">閲覧</th>
+            <th class="text-center" style="width:120px;">作成日</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-center">3</td>
+            <td>
+              <a class="text-light" href="detail.html">アニメーションおすすめしてください。</a>
+            </td>
+            <td class="text-center">テスト会員1</td>
+            <td class="text-center">0</td>
+            <td class="text-center">0</td>
+            <td class="text-center">0</td>
+            <td class="text-center text-muted">2026-09-08</td>
+          </tr>
+          <tr>
+            <td class="text-center">2</td>
+            <td>
+              <a class="text-light" href="detail.html">こんにちは！</a>
+            </td>
+            <td class="text-center">テスト会員2</td>
+            <td class="text-center">0</td>
+            <td class="text-center">0</td>
+            <td class="text-center">0</td>
+            <td class="text-center text-muted">2026-09-08</td>
+          </tr>
+          <tr>
+            <td class="text-center">1</td>
+            <td>
+              <a class="text-light" href="detail.html">最初の投稿です。</a>
+            </td>
+            <td class="text-center">テスト会員1</td>
+            <td class="text-center">0</td>
+            <td class="text-center">0</td>
+            <td class="text-center">0</td>
+            <td class="text-center text-muted">2026-09-08</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<footer class="footer text-center req-anchor">
+  <span class="req-id" style="position:static; display:inline-block; margin-bottom:.5rem;">SYS-002</span>
+  <div>ANIVERSE — アニメおすすめサイト プロジェクト · JSP + Oracle + Bootstrap</div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script>
+if (localStorage.getItem("aniverseTheme") === "light") {
+  document.body.classList.add("light-mode");
+}
+
+var themeBtn = document.getElementById("themeToggleBtn");
+
+function syncThemeIcon() {
+  if (!themeBtn) return;
+  themeBtn.textContent =
+    document.body.classList.contains("light-mode") ? "☀️" : "🌙";
+}
+
+function toggleTheme() {
+  document.body.classList.toggle("light-mode");
+  var isLight = document.body.classList.contains("light-mode");
+  localStorage.setItem("aniverseTheme", isLight ? "light" : "dark");
+  syncThemeIcon();
+}
+
+function toggleSpec() {
+  document.body.classList.toggle("spec-mode");
+  var btn = document.getElementById("specToggleBtn");
+  if (btn) btn.classList.toggle("on");
+}
+
+syncThemeIcon();
+</script>
+</body>
+</html>
