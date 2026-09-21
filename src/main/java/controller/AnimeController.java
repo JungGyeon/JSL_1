@@ -39,6 +39,11 @@ public class AnimeController extends HttpServlet {
 
 		System.out.println("action: " + action);
 
+		if (action == null) {
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			return;
+		}
+
 		String page = null;
 
 		switch (action) {
@@ -57,6 +62,9 @@ public class AnimeController extends HttpServlet {
 			page = "/detail/detail.jsp";
 			break;
 
+		default:
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			return;
 		}
 
 		if (page != null) {

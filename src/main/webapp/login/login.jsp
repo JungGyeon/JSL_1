@@ -22,8 +22,7 @@
 
 	<%@ include file="/common/header.jsp"%>
 
-	<section class="section container req-anchor" style="max-width: 420px;">
-		<span class="req-id">AUTH-001 · AUTH-002 · AUTH-003</span>
+	<section class="section container" style="max-width: 420px;">
 		<div class="surface p-4 p-md-5">
 			<h3 class="text-center mb-1">ログイン</h3>
 			<p class="text-muted text-center mb-4 small">ANIVERSEであなただけのお気に入りリストを管理しましょう</p>

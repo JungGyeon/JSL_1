@@ -41,8 +41,7 @@ String encodedBack = java.net.URLEncoder.encode(backUrl, "UTF-8");
 		</div>
 	</section>
 
-	<section class="section container req-anchor">
-		<span class="req-id">REC-001 · REC-002 · REC-003</span>
+	<section class="section container">
 
 		<c:choose>
 
@@ -65,14 +64,14 @@ String encodedBack = java.net.URLEncoder.encode(backUrl, "UTF-8");
 			<c:otherwise>
 				<p class="text-muted mb-3">お気に入りのタグと近い作品を、一致するタグの数が多い順に紹介します。</p>
 
-				<div class="row g-3">
+				<div id="animeGrid" class="row g-3 anime-card-grid">
 					<c:forEach var="anime" items="${recommendList}">
 						<div class="col-6 col-md-4 col-lg-3">
 							<div style="position: relative;">
 								<a class="anime-card"
 									href="${pageContext.request.contextPath}/anime/detail.do?animeId=${anime.animeId}">
 									<div class="poster"
-										style="background-image:url('${anime.thumbnail}'); background-size:cover; background-position:center;">
+										style="background-image:url('${anime.picture}'); background-size:cover; background-position:center;">
 										<span class="mono"
 											style="position: absolute; top: .5rem; left: .5rem; background: rgba(20,17,31,.75); color: var(--accent-2); font-size: .72rem; font-weight: 600; padding: .15rem .5rem; border-radius: 6px;">
 											タグ一致 ${anime.matchCount}
@@ -88,6 +87,7 @@ String encodedBack = java.net.URLEncoder.encode(backUrl, "UTF-8");
 						</div>
 					</c:forEach>
 				</div>
+				<div id="animeGridPagination" class="card-pagination"></div>
 			</c:otherwise>
 
 		</c:choose>

@@ -43,6 +43,11 @@ public class FavoriteController extends HttpServlet {
 
 		System.out.println("action: " + action);
 
+		if (action == null) {
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			return;
+		}
+
 		String page = null;
 
 		switch (action) {
@@ -64,6 +69,10 @@ public class FavoriteController extends HttpServlet {
 			new FavoriteListService().doCommand(request, response);
 			page = "/mypage/mypage.jsp";
 			break;
+
+		default:
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			return;
 		}
 
 		if (page != null) {

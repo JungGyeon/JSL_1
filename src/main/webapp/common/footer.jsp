@@ -5,14 +5,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 
-<footer class="footer text-center req-anchor">
-	<span class="req-id"
-		style="position: static; display: inline-block; margin-bottom: .5rem;">SYS-002</span>
+<footer class="footer text-center">
 	<div>ANIVERSE — アニメおすすめサイト プロジェクト · JSP + Oracle + Bootstrap</div>
 </footer>
 
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/card-pagination.js"></script>
 <script>
 	var themeBtn = document.getElementById("themeToggleBtn");
 	function syncThemeIcon() {
@@ -28,11 +27,4 @@
 		syncThemeIcon();
 	}
 	syncThemeIcon();
-
-	function toggleSpec() {
-		document.body.classList.toggle("spec-mode");
-		var btn = document.getElementById("specToggleBtn");
-		if (btn)
-			btn.classList.toggle("on");
-	}
 </script>
