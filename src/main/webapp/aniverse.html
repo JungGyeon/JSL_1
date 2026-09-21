@@ -1,0 +1,1255 @@
+<meta charset="UTF-8">
+<title>ANIVERSE 発表資料</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&amp;family=Noto+Sans+JP:wght@400;500;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    color-scheme: light;
+  }
+  html, body{
+    background: #ebe8f6;
+  }
+  body{
+    font-family:'Noto Sans JP',sans-serif;
+    color:#221d34;
+  }
+  h1,h2,h3,h4,.font-display{
+    font-family:'Zen Kaku Gothic New',sans-serif;
+  }
+  .font-mono{ font-family:'JetBrains Mono',monospace; }
+
+  /* ---- deck shell ---- */
+  .deck{
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 32px 16px 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+  }
+  .deck-head{
+    width:100%;
+    max-width:1280px;
+    padding: 4px 4px 0;
+  }
+
+  /* ---- responsive 1280x720 slide canvas ----
+     슬라이드는 1280x720 고정 캔버스로 디자인하고, 뷰포트 폭에 맞춰
+     container query 단위(cqw)로 스케일만 낮춰서 모바일에서도
+     가로 스크롤 없이 전체가 한 화면에 들어오도록 한다. */
+  .slide-viewport{
+    container-type: inline-size;
+    width: 100%;
+    max-width: 1280px;
+    aspect-ratio: 1280 / 720;
+    position: relative;
+    overflow: hidden;
+    border-radius: 18px;
+    box-shadow: 0 1px 2px rgba(34,29,52,.04), 0 18px 40px -20px rgba(34,29,52,.28);
+    border: 1px solid #e3dff0;
+    background: #ffffff;
+  }
+  .slide{
+    width: 1280px;
+    height: 720px;
+    transform: scale(calc(100cqw / 1280px));
+    transform-origin: top left;
+    position: relative;
+    background: #ffffff;
+    color:#221d34;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+
+  .slide-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    letter-spacing:.08em;
+    color:#8a81a3;
+    margin: 0 2px 8px;
+  }
+
+  .topbar{
+    position:absolute; top:0; left:0; width:100%; height:6px;
+    background: linear-gradient(90deg, #ff6b81 0%, #ff9db0 45%, #6ee7d8 100%);
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:#157b6e;
+    font-weight:600;
+  }
+  .glow{
+    position:absolute; border-radius:9999px; filter:blur(2px);
+    pointer-events:none;
+  }
+  .icon{ width:1em; height:1em; display:inline-block; vertical-align:-0.14em; }
+
+
+  /* ---- presentation readability tuning ---- */
+  .compact-overview .grid { gap-y: 2px; }
+  .compact-overview .space-y-2 > * + * { margin-top: .35rem !important; }
+  .compact-overview .flex.items-center.gap-3.p-2 { padding: .42rem .6rem !important; }
+
+  .compact-tech .card { padding: .65rem !important; }
+  .compact-tech .card .mb-2 { margin-bottom: .35rem !important; }
+  .compact-tech .card .space-y-1\.5 > * + * { margin-top: .3rem !important; }
+  .compact-tech .card .text-\[12px\] { line-height: 1.25 !important; }
+  .compact-tech .card .w-8.h-8 { width: 1.75rem !important; height: 1.75rem !important; }
+
+  .compact-req { }
+  .compact-req .card { padding: .6rem !important; }
+  .compact-req .card .mb-1\.5 { margin-bottom: .3rem !important; }
+  .compact-req .card .space-y-1\.5 > * + * { margin-top: .3rem !important; }
+  .compact-req .text-\[12px\], .compact-req .text-\[11px\] { line-height: 1.25 !important; }
+  .compact-req .chip { padding-top: .1rem !important; padding-bottom: .1rem !important; }
+
+  .compact-feature .card { padding: .65rem !important; }
+  .compact-feature .process-step { margin-bottom: .55rem !important; }
+  .compact-feature .process-step:last-child { margin-bottom: 0 !important; }
+  .compact-feature .process-step p { margin-top: .2rem !important; line-height: 1.25 !important; }
+  .compact-feature .code-box { margin-top: .2rem !important; padding: .35rem .5rem !important; }
+  .compact-feature .flex.items-center.gap-3.mb-3 { margin-bottom: .45rem !important; padding-bottom: .35rem !important; }
+  .compact-feature .w-10.h-10 { width: 2rem !important; height: 2rem !important; }
+
+  /* additional targeted spacing fixes */
+  .compact-tech .why-servlet {
+    margin-top: .35rem !important;
+    margin-bottom: .45rem !important;
+    padding: .45rem .6rem !important;
+    gap: .5rem !important;
+  }
+  .compact-tech .why-servlet p:first-child { font-size: 12px !important; line-height: 1.2 !important; }
+  .compact-tech .why-servlet p:last-child { font-size: 10px !important; line-height: 1.2 !important; margin-top: .15rem !important; }
+  .compact-tech .why-servlet svg { width: 14px !important; height: 14px !important; }
+
+  .compact-req .req-heading { margin-bottom: .35rem !important; }
+  .compact-req .nonfunc-heading { margin-bottom: .15rem !important; }
+
+  .compact-req .req-heading .w-8.h-8,
+  .compact-req .nonfunc-heading .w-8.h-8 { width: 1.75rem !important; height: 1.75rem !important; }
+
+  .database-grid { max-width: 1080px; }
+
+  .chip{
+    display:inline-flex; align-items:center; gap:6px;
+    padding:6px 14px; border-radius:9999px;
+    font-size:13px; font-weight:700;
+    background:#fff0f2; color:#c93a56; border:1px solid #ffd7dd;
+  }
+  .chip.mint{ background:#eafbf8; color:#157b6e; border-color:#c9f2ea; }
+  .chip.dark{ background:#221d34; color:#fff; border-color:#221d34; }
+
+  .card{
+    background:#ffffff; border:1px solid #e3dff0; border-radius:16px;
+    box-shadow: 0 1px 2px rgba(34,29,52,.03), 0 10px 24px -18px rgba(34,29,52,.35);
+  }
+  .idx-badge{
+    width:28px; height:28px; border-radius:8px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono',monospace; font-weight:700; font-size:11.5px;
+    background:#fff0f2; color:#c93a56; flex:none;
+  }
+  .idx-badge.mint{ background:#eafbf8; color:#157b6e; }
+
+  .check-li{ display:flex; align-items:flex-start; gap:10px; }
+  .check-li .icon{ color:#ff6b81; margin-top:3px; flex:none; }
+
+  .code-box{
+    font-family:'JetBrains Mono',monospace; font-size:11px;
+    background:#221d34; color:#eafbf8; border-radius:8px;
+    padding:6px 10px; overflow-x:auto; white-space:pre;
+  }
+  .code-box .kw{ color:#ff9db0; }
+  .code-box .str{ color:#6ee7d8; }
+
+  .req-table{ width:100%; border-collapse:separate; border-spacing:0; }
+  .req-table th{
+    text-align:left; font-size:12px; font-weight:700; color:#6c6484;
+    background:#fff0f2; padding:10px 14px; border-bottom:2px solid #ffd7dd;
+  }
+  .req-table th:first-child{ border-top-left-radius:10px; }
+  .req-table th:last-child{ border-top-right-radius:10px; }
+  .req-table td{
+    padding:10px 14px; border-bottom:1px solid #efeaf7; vertical-align:top;
+    font-size:12.5px; color:#221d34;
+  }
+  .req-table tr:nth-child(even) td{ background:#faf9fd; }
+
+  .process-step{ position:relative; padding:0 0 5px 20px; border-left:2px solid #efeaf7; }
+  .process-step:last-child{ border-color:transparent; padding-bottom:0; }
+  .step-dot{
+    position:absolute; left:-6px; top:2px; width:10px; height:10px;
+    border-radius:9999px; background:#ff6b81; box-shadow:0 0 0 3px #fff0f2;
+  }
+  .step-dot.mint{ background:#157b6e; box-shadow:0 0 0 3px #eafbf8; }
+
+  .entity-card{ background:#fff; border:1px solid #e3dff0; border-radius:12px; overflow:hidden; }
+  .entity-head{ padding:8px 14px; font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:space-between; }
+  .entity-row{ display:flex; justify-content:space-between; gap:8px; padding:4px 14px; font-size:11.5px; border-top:1px solid #f2effa; }
+  .entity-row .col{ font-family:'JetBrains Mono',monospace; color:#6c6484; }
+  .entity-row .pk{ color:#c93a56; font-weight:700; }
+  .entity-row .fk{ color:#157b6e; font-weight:600; }
+
+  .fill-dashed{
+    border:1.5px dashed #d9d3ee; border-radius:14px;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(255,107,129,.05), transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(110,231,216,.08), transparent 40%),
+      #faf9fd;
+  }
+
+  /* =========================================================
+     유틸리티 CSS (Tailwind 대체)
+     ---------------------------------------------------------
+     발표 슬라이드는 CDN 하나가 막혀도 그대로 무너지면 안 되는
+     자료이므로, Tailwind Play CDN(JIT 컴파일)에 기대는 대신
+     실제로 쓰인 유틸리티 클래스만 순수 CSS로 직접 정의해
+     외부 스크립트 없이도 항상 동일하게 렌더링되도록 한다.
+     ========================================================= */
+  .absolute{position:absolute}
+  .relative{position:relative}
+  .block{display:block}
+  .inline-block{display:inline-block}
+  .flex{display:flex}
+  .flex-col{flex-direction:column}
+  .flex-1{flex:1 1 0%}
+  .flex-none{flex:none}
+  .flex-wrap{flex-wrap:wrap}
+  .grid{display:grid}
+  .overflow-hidden{overflow:hidden}
+  .pointer-events-none{pointer-events:none}
+  .select-none{user-select:none}
+  .w-full{width:100%}
+  .w-fit{width:fit-content}
+  .z-10{z-index:10}
+  .top-0{top:0} .left-0{left:0} .right-0{right:0} .bottom-0{bottom:0}
+  .-top-3{top:-.75rem} .bottom-6{bottom:1.5rem} .right-14{right:3.5rem} .left-5{left:1.25rem}
+
+  .grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .grid-cols-12{grid-template-columns:repeat(12,minmax(0,1fr))}
+  .col-span-6{grid-column:span 6 / span 6}
+
+  .items-center{align-items:center} .items-start{align-items:flex-start}
+  .items-end{align-items:flex-end} .items-stretch{align-items:stretch}
+  .justify-between{justify-content:space-between} .justify-center{justify-content:center}
+
+  .gap-1{gap:.25rem} .gap-1\.5{gap:.375rem} .gap-2{gap:.5rem} .gap-2\.5{gap:.625rem}
+  .gap-3{gap:.75rem} .gap-4{gap:1rem} .gap-5{gap:1.25rem} .gap-6{gap:1.5rem}
+  .gap-8{gap:2rem} .gap-10{gap:2.5rem} .gap-x-16{column-gap:4rem} .gap-y-4{row-gap:1rem}
+  .space-y-1 > * + *{margin-top:.25rem}
+  .space-y-1\.5 > * + *{margin-top:.375rem}
+  .space-y-2 > * + *{margin-top:.5rem} .space-y-2\.5 > * + *{margin-top:.625rem} .space-y-4 > * + *{margin-top:1rem}
+
+  .w-1\.5{width:.375rem} .w-5{width:1.25rem} .w-8{width:2rem} .w-10{width:2.5rem}
+  .w-12{width:3rem} .w-16{width:4rem} .w-20{width:5rem} .w-24{width:6rem} .w-40{width:10rem}
+  .w-\[130px\]{width:130px} .w-\[34\%\]{width:34%} .w-\[66\%\]{width:66%}
+  .h-1{height:.25rem} .h-1\.5{height:.375rem} .h-2{height:.5rem} .h-2\.5{height:.625rem}
+  .h-5{height:1.25rem} .h-8{height:2rem} .h-10{height:2.5rem} .h-12{height:3rem}
+  .h-28{height:7rem} .h-\[10px\]{height:10px}
+
+  .p-2{padding:.5rem} .p-2\.5{padding:.625rem} .p-3{padding:.75rem} .p-3\.5{padding:.875rem} .p-4{padding:1rem} .p-5{padding:1.25rem}
+  .px-1{padding-left:.25rem;padding-right:.25rem} .px-3{padding-left:.75rem;padding-right:.75rem}
+  .px-4{padding-left:1rem;padding-right:1rem} .px-6{padding-left:1.5rem;padding-right:1.5rem}
+  .px-10{padding-left:2.5rem;padding-right:2.5rem} .px-16{padding-left:4rem;padding-right:4rem} .px-24{padding-left:6rem;padding-right:6rem}
+  .py-0\.5{padding-top:.125rem;padding-bottom:.125rem}
+  .py-1{padding-top:.25rem;padding-bottom:.25rem} .py-1\.5{padding-top:.375rem;padding-bottom:.375rem}
+  .py-2{padding-top:.5rem;padding-bottom:.5rem} .py-6{padding-top:1.5rem;padding-bottom:1.5rem}
+  .py-7{padding-top:1.75rem;padding-bottom:1.75rem} .py-8{padding-top:2rem;padding-bottom:2rem} .py-10{padding-top:2.5rem;padding-bottom:2.5rem}
+  .pt-1\.5{padding-top:.375rem} .pt-2{padding-top:.5rem} .pt-8{padding-top:2rem} .pt-10{padding-top:2.5rem} .pt-12{padding-top:3rem}
+  .pb-3{padding-bottom:.75rem} .pb-4{padding-bottom:1rem} .pb-6{padding-bottom:1.5rem}
+  .pl-10{padding-left:2.5rem}
+  .mb-1{margin-bottom:.25rem} .mb-1\.5{margin-bottom:.375rem} .mb-2\.5{margin-bottom:.625rem}
+  .mb-3{margin-bottom:.75rem} .mb-4{margin-bottom:1rem} .mb-5{margin-bottom:1.25rem} .mb-8{margin-bottom:2rem} .mb-10{margin-bottom:2.5rem}
+  .mt-0\.5{margin-top:.125rem} .mt-1{margin-top:.25rem} .mt-1\.5{margin-top:.375rem} .mt-2{margin-top:.5rem}
+  .mt-3{margin-top:.75rem} .mt-4{margin-top:1rem} .mt-6{margin-top:1.5rem} .mt-9{margin-top:2.25rem}
+  .ml-1{margin-left:.25rem} .ml-2{margin-left:.5rem}
+
+  .rounded{border-radius:.375rem} .rounded-sm{border-radius:.25rem} .rounded-md{border-radius:.5rem}
+  .rounded-lg{border-radius:.75rem} .rounded-xl{border-radius:1rem} .rounded-full{border-radius:9999px}
+
+  .border{border-width:1px;border-style:solid;border-color:#e3dff0}
+  .border-b{border-bottom-width:1px;border-bottom-style:solid;border-color:#e3dff0}
+  .border-t{border-top-width:1px;border-top-style:solid;border-color:#e3dff0}
+  .border-t-2{border-top-width:2px;border-top-style:solid}
+  .border-t-4{border-top-width:4px;border-top-style:solid}
+  .border-l-4{border-left-width:4px;border-left-style:solid}
+  .border-l-\[6px\]{border-left-width:6px;border-left-style:solid}
+  .border-l-\[10px\]{border-left-width:10px;border-left-style:solid}
+  .border-dashed{border-style:dashed}
+  .border-ink{border-color:#221d34} .border-ink\/20{border-color:rgba(34,29,52,.2)}
+  .border-line{border-color:#e3dff0} .border-mintdeep{border-color:#157b6e} .border-pink{border-color:#ff6b81}
+  .border-\[\#c9f2ea\]{border-color:#c9f2ea} .border-\[\#ffd7dd\]{border-color:#ffd7dd}
+
+  .bg-white{background-color:#fff} .bg-white\/60{background-color:rgba(255,255,255,.6)}
+  .bg-ink{background-color:#221d34} .bg-ink\/55{background-color:rgba(34,29,52,.55)}
+  .bg-ink\/70{background-color:rgba(34,29,52,.7)} .bg-ink\/85{background-color:rgba(34,29,52,.85)}
+  .bg-mintdeep{background-color:#157b6e} .bg-mintsoft{background-color:#eafbf8}
+  .bg-pink{background-color:#ff6b81} .bg-pinksoft{background-color:#fff0f2} .bg-surface2{background-color:#f6f4fc}
+  .bg-gradient-to-r{background-image:linear-gradient(90deg,var(--tw-from),var(--tw-via,var(--tw-to)),var(--tw-to))}
+  .from-pink{--tw-from:#ff6b81} .via-\[\#ff9db0\]{--tw-via:#ff9db0} .to-mint{--tw-to:#6ee7d8}
+
+  .text-ink{color:#221d34} .text-ink\/70{color:rgba(34,29,52,.7)} .text-ink\/75{color:rgba(34,29,52,.75)}
+  .text-ink\/80{color:rgba(34,29,52,.8)} .text-ink\/\[0\.05\]{color:rgba(34,29,52,.05)}
+  .text-line{color:#e3dff0} .text-mintdeep{color:#157b6e} .text-muted{color:#6c6484}
+  .text-muted\/80{color:rgba(108,100,132,.8)} .text-pinkdeep{color:#c93a56} .text-white{color:#fff}
+
+  .text-xs{font-size:.75rem;line-height:1.35} .text-sm{font-size:.875rem;line-height:1.4}
+  .text-base{font-size:1rem;line-height:1.5} .text-lg{font-size:1.125rem;line-height:1.5}
+  .text-xl{font-size:1.25rem;line-height:1.5} .text-2xl{font-size:1.5rem;line-height:1.35}
+  .text-3xl{font-size:1.875rem;line-height:1.25} .text-4xl{font-size:2.25rem;line-height:1.2}
+  .text-\[9px\]{font-size:9px} .text-\[10px\]{font-size:10px} .text-\[10\.5px\]{font-size:10.5px}
+  .text-\[11px\]{font-size:11px} .text-\[11\.5px\]{font-size:11.5px} .text-\[12px\]{font-size:12px}
+  .text-\[12\.5px\]{font-size:12.5px} .text-\[13px\]{font-size:13px} .text-\[15px\]{font-size:15px}
+  .text-\[104px\]{font-size:104px} .text-\[110px\]{font-size:110px}
+  .\!text-\[10px\]{font-size:10px!important} .\!text-\[13px\]{font-size:13px!important}
+
+  .font-black{font-weight:900} .font-bold{font-weight:700} .font-light{font-weight:300} .font-normal{font-weight:400}
+  .font-mono{font-family:'JetBrains Mono',monospace} .font-display{font-family:'Zen Kaku Gothic New',sans-serif}
+
+  .leading-none{line-height:1} .leading-relaxed{line-height:1.65} .leading-snug{line-height:1.4} .leading-tight{line-height:1.3}
+  .tracking-tight{letter-spacing:-.02em} .tracking-wide{letter-spacing:.03em} .tracking-wider{letter-spacing:.07em}
+  .uppercase{text-transform:uppercase} .text-center{text-align:center}
+
+  .shadow-sm{box-shadow:0 1px 2px rgba(34,29,52,.06)} .shadow-lg{box-shadow:0 12px 24px -8px rgba(34,29,52,.22)}
+  .shadow-pink\/30{box-shadow:0 10px 20px -6px rgba(255,107,129,.3)}
+  .rotate-180{transform:rotate(180deg)}
+  .max-w-4xl{max-width:56rem}
+
+  .\!px-2{padding-left:.5rem!important;padding-right:.5rem!important}
+  .\!px-4{padding-left:1rem!important;padding-right:1rem!important}
+  .\!py-0\.5{padding-top:.125rem!important;padding-bottom:.125rem!important}
+  .\!py-2{padding-top:.5rem!important;padding-bottom:.5rem!important}
+
+</style>
+
+<!-- ============================================================
+     아이콘 스프라이트 : Font Awesome 등 외부 아이콘 서체 대신,
+     ANIVERSE 톤에 맞춘 심플한 라인 아이콘을 직접 그려서 재사용한다.
+     ============================================================ -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4.5 20c1.4-4 4-6 7.5-6s6.1 2 7.5 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="15" rx="2.4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 10h17M8 3.5v4M16 3.5v4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 17h6M9.5 21h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 3a6.5 6.5 0 0 0-3.6 11.9c.6.45.9 1 .9 1.7V17h5.4v-.4c0-.7.3-1.25.9-1.7A6.5 6.5 0 0 0 12 3Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3.5 20.5 8 12 12.5 3.5 8 12 3.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M3.5 12.2 12 16.7l8.5-4.5M3.5 16.4 12 20.9l8.5-4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-medal" viewBox="0 0 24 24"><circle cx="12" cy="14" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m9 8.5-2.5-5M15 8.5l2.5-5M9.5 3.5h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 11v6M9.3 14h5.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path d="m8.5 7-5 5 5 5M15.5 7l5 5-5 5M13.2 4.5l-2.4 15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-server" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="6" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="3.5" y="13.5" width="17" height="6" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="7" cy="7.5" r="1" fill="currentColor" stroke="none"/><circle cx="7" cy="16.5" r="1" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7.5" ry="2.6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4.5 6v12c0 1.4 3.4 2.6 7.5 2.6s7.5-1.2 7.5-2.6V6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4.5 12c0 1.4 3.4 2.6 7.5 2.6s7.5-1.2 7.5-2.6" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3.5 19 6v6c0 5-3 7.8-7 8.5-4-.7-7-3.5-7-8.5V6l7-2.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m9 12 2.2 2.2L15.5 9.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-gauge" viewBox="0 0 24 24"><path d="M3.5 17a8.5 8.5 0 0 1 17 0" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 17 16 10.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="17" r="1.1" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-comment" viewBox="0 0 24 24"><path d="M4 5.5h16v10H9.5L5.5 19v-3.5H4v-10Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.4-9.6-9.2C1.2 7.7 3 4.8 6.2 4.6c2-.1 3.6 1 5.8 3.4 2.2-2.4 3.8-3.5 5.8-3.4 3.2.2 5 3.1 3.8 6.2C19.5 15.6 12 20 12 20Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24"><path d="M11.5 3.5h6.5a1.5 1.5 0 0 1 1.5 1.5v6.5a2 2 0 0 1-.6 1.4l-8 8a2 2 0 0 1-2.8 0l-6-6a2 2 0 0 1 0-2.8l8-8a2 2 0 0 1 1.4-.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="16" cy="8" r="1.4" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="M9.5 14.5 14.5 9.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M11 6.5 12.8 4.7a3.6 3.6 0 0 1 5.1 5.1L16 11.6M13 17.5l-1.8 1.8a3.6 3.6 0 0 1-5.1-5.1L8 12.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15.5M14 6.5 19.5 12 14 17.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m4.5 12.5 5 5L19.5 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m4.5 7 7.5 6 7.5-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-film" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7 5v14M17 5v14M3 9.5h4M17 9.5h4M3 14.5h4M17 14.5h4" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5.5 3.5v17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M5.5 4.5h11l-2.6 4 2.6 4h-11Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m19.5 19.5-4.3-4.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7.2" height="7.2" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="13.3" y="3.5" width="7.2" height="7.2" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="3.5" y="13.3" width="7.2" height="7.2" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="13.3" y="13.3" width="7.2" height="7.2" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="9.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7.5 10.5V7.8a4.5 4.5 0 0 1 9 0v2.7" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="15" r="1.2" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.5M12 19v2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M2.5 12H5M19 12h2.5M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.2A8.3 8.3 0 1 1 9.8 4a6.6 6.6 0 0 0 10.2 10.2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4.5h6.5a2 2 0 0 1 2 2V20a2 2 0 0 0-2-1.5H4V4.5ZM20 4.5h-6.5a2 2 0 0 0-2 2V20a2 2 0 0 1 2-1.5H20V4.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 0 1 12.6-5.5M19.5 12a7.5 7.5 0 0 1-12.6 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M17 4.5v3.5h-3.5M7 19.5V16h3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.5 6.5a4 4 0 0 0-5.4 4.9L4 16.5l3 3 5.1-5.1a4 4 0 0 0 4.9-5.4l-2.8 2.8-2.1-.6-.6-2.1 2.8-2.8Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+<div class="deck">
+
+<!-- =========================================================
+     SLIDE 1 — 表紙
+     ========================================================= -->
+<div class="slide-viewport">
+<div class="slide">
+  <div class="topbar"></div>
+  <div class="glow" style="width:340px;height:340px;background:radial-gradient(circle,rgba(255,107,129,.16),transparent 70%);top:-120px;right:-80px;"></div>
+  <div class="glow" style="width:300px;height:300px;background:radial-gradient(circle,rgba(110,231,216,.20),transparent 70%);bottom:-100px;left:-60px;"></div>
+
+  <div class="flex-1 flex flex-col justify-center px-24 relative z-10">
+    <span class="eyebrow mb-8">Portfolio Project · Web Application</span>
+
+    <div class="mb-10 border-l-[10px] border-pink pl-10">
+      <h1 class="font-display text-[104px] leading-none font-black text-ink tracking-tight">ANIVERSE</h1>
+      <h2 class="font-display text-3xl font-light text-muted mt-4">アニメ推薦 <span class="font-bold text-ink">×</span> コミュニティ掲示板</h2>
+      <p class="text-sm text-muted mt-2 font-mono">애니메이션 추천 × 커뮤니티 게시판 웹 서비스</p>
+    </div>
+
+    <div class="grid grid-cols-12 gap-10 pt-8 border-t border-line max-w-4xl">
+      <div class="col-span-6 flex items-start gap-4">
+        <div class="w-12 h-12 rounded-xl bg-pink text-white flex items-center justify-center shadow-lg shadow-pink/30 flex-none"><svg class="icon" style="width:22px;height:22px"><use href="#i-user"/></svg></div>
+        <div>
+          <p class="text-[11px] font-bold text-muted uppercase tracking-wider font-mono mb-1">Developer</p>
+          <div class="grid grid-cols-2 gap-x-4 gap-y-0.5">
+            <p class="text-[15px] font-bold text-ink leading-snug">ジョン・ギヒョン</p>
+            <p class="text-[15px] font-bold text-ink leading-snug">キム・ジュンヒョク</p>
+            <p class="text-[15px] font-bold text-ink leading-snug">ジョ・ムンジュン</p>
+            <p class="text-[15px] font-bold text-ink leading-snug">ジョン・スンファン</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-span-6 flex items-start gap-4">
+        <div class="w-12 h-12 rounded-xl bg-white border border-line text-mintdeep flex items-center justify-center shadow-sm flex-none"><svg class="icon" style="width:22px;height:22px"><use href="#i-calendar"/></svg></div>
+        <div>
+          <p class="text-[11px] font-bold text-muted uppercase tracking-wider font-mono mb-1">Development Period</p>
+          <p class="text-2xl font-bold text-ink">2026.7.30 ～ 2026.9.20</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap gap-3 mt-9">
+      <span class="chip">Servlet / JSP</span>
+      <span class="chip mint">Oracle Database</span>
+      <span class="chip dark">MVC Pattern</span>
+    </div>
+  </div>
+
+  <div class="absolute bottom-0 w-full h-[10px] bg-gradient-to-r from-pink via-[#ff9db0] to-mint"></div>
+</div>
+</div>
+
+<!-- =========================================================
+     SLIDE 2 — 目次
+     ========================================================= -->
+<div class="slide-viewport">
+<div class="slide compact-overview">
+  <div class="topbar"></div>
+  <div class="glow" style="width:280px;height:280px;background:radial-gradient(circle,rgba(255,107,129,.08),transparent 70%);bottom:-100px;right:-60px;"></div>
+
+  <div class="px-16 pt-10 pb-4 flex justify-between items-end border-b border-line relative z-10">
+    <div>
+      <span class="eyebrow block mb-1">Overview</span>
+      <h1 class="font-display text-4xl font-black text-ink">目次 <span class="text-xl font-light text-muted ml-2">アジェンダ</span></h1>
+    </div>
+    <div class="text-muted text-sm font-mono">ANIVERSE Presentation</div>
+  </div>
+
+  <div class="flex-1 px-16 py-5 relative z-10 flex items-center">
+    <div class="grid grid-cols-2 gap-x-16 gap-y-4 w-full">
+      <div class="space-y-2">
+        <div class="flex items-center gap-3 p-2 rounded-xl bg-surface2 border-l-4 border-pink">
+          <div class="idx-badge">01</div>
+          <div><h3 class="font-bold text-ink text-sm">プロジェクト概要</h3><p class="text-[10px] text-muted font-mono">Project Overview</p></div>
+        </div>
+        <div class="flex items-center gap-3 p-2 rounded-xl bg-surface2 border-l-4 border-pink">
+          <div class="idx-badge">02</div>
+          <div><h3 class="font-bold text-ink text-sm">技術スタック</h3><p class="text-[10px] text-muted font-mono">Tech Stack</p></div>
+        </div>
+        <div class="flex items-center gap-3 p-2 rounded-xl bg-surface2 border-l-4 border-pink">
+          <div class="idx-badge">03</div>
+          <div><h3 class="font-bold text-ink text-sm">要件定義</h3><p class="text-[10px] text-muted font-mono">Requirements Analysis</p></div>
+        </div>
+        <div class="flex items-center gap-3 p-2 rounded-xl bg-surface2 border-l-4 border-pink">
+          <div class="idx-badge">04</div>
+          <div><h3 class="font-bold text-ink text-sm">システムアーキテクチャ</h3><p class="text-[10px] text-muted font-mono">MVC Architecture</p></div>
+        </div>
+        <div class="flex items-center gap-3 p-2 rounded-xl bg-surface2 border-l-4 border-pink">
+          <div class="idx-badge">05</div>
+          <div><h3 class="font-bold text-ink text-sm">データベース設計</h3><p class="text-[10px] text-muted font-mono">Database / ERD</p></div>
+        </div>
+      </div>
+      <div class="space-y-2">
+        <div class="flex items-center gap-3 p-2 rounded-xl bg-surface2 border-l-4 border-mintdeep">
+          <div class="idx-badge mint">06</div>
+          <div><h3 class="font-bold text-ink text-sm">主要機能① アニメ検索・お気に入り・推薦</h3><p class="text-[10px] text-muted font-mono">Core Feature 1</p></div>
+        </div>
+        <div class="flex items-center gap-3 p-2 rounded-xl bg-surface2 border-l-4 border-mintdeep">
+          <div class="idx-badge mint">07</div>
+          <div><h3 class="font-bold text-ink text-sm">主要機能② 掲示板・コメント</h3><p class="text-[10px] text-muted font-mono">Core Feature 2</p></div>
+        </div>
+        <div class="flex items-center gap-3 p-2 rounded-xl bg-surface2 border-l-4 border-mintdeep">
+          <div class="idx-badge mint">08</div>
+          <div><h3 class="font-bold text-ink text-sm">主要機能③ 会員・認証・UIテーマ</h3><p class="text-[10px] text-muted font-mono">Core Feature 3</p></div>
+        </div>
+        <div class="flex items-center gap-3 p-2 rounded-xl bg-surface2 border-l-4 border-mintdeep">
+          <div class="idx-badge mint">09</div>
+          <div><h3 class="font-bold text-ink text-sm">デモンストレーション</h3><p class="text-[10px] text-muted font-mono">Demo</p></div>
+        </div>
+        <div class="flex items-center gap-3 p-2 rounded-xl bg-surface2 border-l-4 border-mintdeep">
+          <div class="idx-badge mint">10</div>
+          <div><h3 class="font-bold text-ink text-sm">まとめ・今後の展望</h3><p class="text-[10px] text-muted font-mono">Conclusion &amp; Future Plans</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+ 
+</div>
+</div>
+
+<!-- =========================================================
+     SLIDE 3 — プロジェクト概要
+     ========================================================= -->
+<div class="slide-viewport">
+<div class="slide">
+  <div class="topbar"></div>
+
+  <div class="px-16 pt-10 pb-4 flex justify-between items-end border-b border-line bg-white relative z-10">
+    <div>
+      <span class="eyebrow block mb-1">Project Overview</span>
+      <h1 class="font-display text-4xl font-black text-ink">プロジェクト概要 <span class="text-xl font-light text-muted ml-2">개요</span></h1>
+    </div>
+    <div class="text-muted text-sm font-mono">01 · Overview</div>
+  </div>
+
+  <div class="flex-1 px-16 py-2 bg-surface2 relative overflow-hidden flex flex-col justify-center">
+    <div class="grid grid-cols-2 gap-2 relative z-10">
+
+      <div class="card p-4 border-t-4 border-pink flex flex-col">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-8 h-8 rounded-lg bg-pinksoft text-pinkdeep flex items-center justify-center"><svg class="icon" style="width:16px;height:16px"><use href="#i-bulb"/></svg></div>
+          <div><h3 class="font-bold text-ink text-base">開発背景</h3><p class="text-[11px] text-muted font-mono">Background</p></div>
+        </div>
+        <ul class="space-y-1 flex-1">
+          <li class="check-li"><svg class="icon" style="width:14px;height:14px"><use href="#i-check"/></svg><p class="text-[12px] text-ink/80 leading-snug"><span class="font-bold text-ink">Servlet/JSP 実務理解</span> — フレームワークに頼らず、HTTPリクエスト・レスポンスとセッション管理の原理を直接実装して体得</p></li>
+          <li class="check-li"><svg class="icon" style="width:14px;height:14px"><use href="#i-check"/></svg><p class="text-[12px] text-ink/80 leading-snug"><span class="font-bold text-ink">好きなテーマで開発</span> — アニメというテーマで、検索・推薦・コミュニティを一つのサービスに統合</p></li>
+        </ul>
+      </div>
+
+      <div class="card p-4 border-t-4 border-mintdeep flex flex-col">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-8 h-8 rounded-lg bg-mintsoft text-mintdeep flex items-center justify-center"><svg class="icon" style="width:16px;height:16px"><use href="#i-target"/></svg></div>
+          <div><h3 class="font-bold text-ink text-base">開発目的</h3><p class="text-[11px] text-muted font-mono">Objectives</p></div>
+        </div>
+        <ul class="space-y-1 flex-1">
+          <li class="check-li"><svg class="icon" style="width:14px;height:14px"><use href="#i-check"/></svg><p class="text-[12px] text-ink/80 leading-snug"><span class="font-bold text-ink">CRUD の完全実装</span> — 生成・照会・修正・削除の全ライフサイクルを実装</p></li>
+          <li class="check-li"><svg class="icon" style="width:14px;height:14px"><use href="#i-check"/></svg><p class="text-[12px] text-ink/80 leading-snug"><span class="font-bold text-ink">MVC パターンの徹底</span> — Controller / Service / DAO を分離し保守性を確保</p></li>
+          <li class="check-li"><svg class="icon" style="width:14px;height:14px"><use href="#i-check"/></svg><p class="text-[12px] text-ink/80 leading-snug"><span class="font-bold text-ink">DB 設計力の証明</span> — 7つのテーブルの正規化とリレーション設計</p></li>
+        </ul>
+      </div>
+
+      <div class="card p-4 border-t-4 border-pink flex flex-col">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-8 h-8 rounded-lg bg-pinksoft text-pinkdeep flex items-center justify-center"><svg class="icon" style="width:16px;height:16px"><use href="#i-layers"/></svg></div>
+          <div><h3 class="font-bold text-ink text-base">プロジェクト範囲</h3><p class="text-[11px] text-muted font-mono">Scope</p></div>
+        </div>
+        <ul class="space-y-1 flex-1">
+          <li class="check-li"><svg class="icon" style="width:14px;height:14px"><use href="#i-check"/></svg><p class="text-[12px] text-ink/80 leading-snug"><span class="font-bold text-ink">コア機能</span>：会員登録・ログイン・掲示板・コメント・お気に入り</p></li>
+          <li class="check-li"><svg class="icon" style="width:14px;height:14px"><use href="#i-check"/></svg><p class="text-[12px] text-ink/80 leading-snug"><span class="font-bold text-ink">応用機能</span>：OAuth連携、メール認証、パスワード暗号化、タグ推薦、ダーク/ライトモード</p></li>
+        </ul>
+      </div>
+
+      <div class="card p-4 border-t-4 border-mintdeep flex flex-col">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-8 h-8 rounded-lg bg-mintsoft text-mintdeep flex items-center justify-center"><svg class="icon" style="width:16px;height:16px"><use href="#i-medal"/></svg></div>
+          <div><h3 class="font-bold text-ink text-base">成果</h3><p class="text-[11px] text-muted font-mono">Key Results</p></div>
+        </div>
+        <ul class="space-y-1 flex-1">
+          <li class="check-li"><svg class="icon" style="width:14px;height:14px"><use href="#i-check"/></svg><p class="text-[12px] text-ink/80 leading-snug"><span class="font-bold text-ink">開発期間（2026.7.30～2026.9.20）</span> で計画した全機能(MVP)を実装完了</p></li>
+          <li class="check-li"><svg class="icon" style="width:14px;height:14px"><use href="#i-check"/></svg><p class="text-[12px] text-ink/80 leading-snug"><span class="font-bold text-ink">UIの完成度</span> — ダーク/ライトモード双方に対応したテーマ設計まで仕上げ</p></li>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+  <div class="absolute bottom-0 w-full h-1 bg-gradient-to-r from-pink to-mint"></div>
+</div>
+</div>
+
+<!-- =========================================================
+     SLIDE 4 — 技術スタック
+     ========================================================= -->
+<div class="slide-viewport">
+<div class="slide compact-tech">
+  <div class="topbar"></div>
+
+  <div class="px-16 pt-10 pb-4 flex justify-between items-end border-b border-line bg-white relative z-10">
+    <div>
+      <span class="eyebrow block mb-1">Tech Stack</span>
+      <h1 class="font-display text-4xl font-black text-ink">技術スタック <span class="text-xl font-light text-muted ml-2">기술 스택</span></h1>
+    </div>
+    <div class="text-muted text-sm font-mono">02 · Tech Stack</div>
+  </div>
+
+  <div class="flex-1 px-16 py-4 bg-surface2 relative overflow-hidden flex flex-col">
+    <p class="text-[13px] text-ink/75 mb-2 relative z-10">
+      フレームワークに頼らない <span class="font-bold text-pinkdeep">Java Servlet</span> ベースのバックエンドと <span class="font-bold text-mintdeep">Oracle Database</span> を組み合わせ、実務に近い堅牢な Web アプリケーション環境を構築した。
+    </p>
+
+    <div class="grid grid-cols-2 gap-2 relative z-10 flex-1">
+
+      <div class="card p-3 border-l-[6px] border-pink">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-8 h-8 rounded-lg bg-pinksoft text-pinkdeep flex items-center justify-center"><svg class="icon" style="width:15px;height:15px"><use href="#i-code"/></svg></div>
+          <div><h3 class="font-bold text-ink text-base">Frontend</h3><p class="text-[11px] text-muted font-mono">View Layer</p></div>
+        </div>
+        <ul class="space-y-1.5">
+          <li class="flex items-center gap-3 text-[12px]"><span class="w-1.5 h-1.5 rounded-full bg-pink flex-none"></span><span class="font-bold w-24">JSP / JSTL</span><span class="text-muted">条件分岐・反復タグでロジックレス表示</span></li>
+          <li class="flex items-center gap-3 text-[12px]"><span class="w-1.5 h-1.5 rounded-full bg-pink flex-none"></span><span class="font-bold w-24">CSS 変数</span><span class="text-muted">ダーク/ライト テーマ トークン設計</span></li>
+          <li class="flex items-center gap-3 text-[12px]"><span class="w-1.5 h-1.5 rounded-full bg-pink flex-none"></span><span class="font-bold w-24">JavaScript</span><span class="text-muted">Vanilla JS によるクライアント側ページネーション</span></li>
+        </ul>
+      </div>
+
+      <div class="card p-3 border-l-[6px] border-mintdeep">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-8 h-8 rounded-lg bg-mintsoft text-mintdeep flex items-center justify-center"><svg class="icon" style="width:15px;height:15px"><use href="#i-server"/></svg></div>
+          <div><h3 class="font-bold text-ink text-base">Backend</h3><p class="text-[11px] text-muted font-mono">Control / Logic</p></div>
+        </div>
+        <ul class="space-y-1.5">
+          <li class="flex items-center gap-3 text-[12px]"><span class="w-1.5 h-1.5 rounded-full bg-mintdeep flex-none"></span><span class="font-bold w-24">Servlet</span><span class="text-muted">コマンドパターンでパス分岐・ディスパッチ</span></li>
+          <li class="flex items-center gap-3 text-[12px]"><span class="w-1.5 h-1.5 rounded-full bg-mintdeep flex-none"></span><span class="font-bold w-24">JDBC</span><span class="text-muted">DriverManager 直結（コネクションプール不使用）</span></li>
+          <li class="flex items-center gap-3 text-[12px]"><span class="w-1.5 h-1.5 rounded-full bg-mintdeep flex-none"></span><span class="font-bold w-24">jBCrypt</span><span class="text-muted">パスワードのハッシュ化・検証</span></li>
+        </ul>
+      </div>
+
+      <div class="card p-3 border-l-[6px] border-pink">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-8 h-8 rounded-lg bg-pinksoft text-pinkdeep flex items-center justify-center"><svg class="icon" style="width:15px;height:15px"><use href="#i-database"/></svg></div>
+          <div><h3 class="font-bold text-ink text-base">Database</h3><p class="text-[11px] text-muted font-mono">Persistence</p></div>
+        </div>
+        <ul class="space-y-1.5">
+          <li class="flex items-center gap-3 text-[12px]"><span class="w-1.5 h-1.5 rounded-full bg-pink flex-none"></span><span class="font-bold w-24">Oracle XE</span><span class="text-muted">thin ドライバ / SQL Developer で運用</span></li>
+          <li class="flex items-center gap-3 text-[12px]"><span class="w-1.5 h-1.5 rounded-full bg-pink flex-none"></span><span class="font-bold" style="width:128px;display:inline-block;flex:none">PreparedStatement</span><span class="text-muted">全クエリをパラメータ化し SQL Injection を防止</span></li>
+          <li class="flex items-center gap-3 text-[12px]"><span class="w-1.5 h-1.5 rounded-full bg-pink flex-none"></span><span class="font-bold" style="width:128px;display:inline-block;flex:none">ROWNUM / MERGE</span><span class="text-muted">サーバー側ページング・リアクション upsert</span></li>
+        </ul>
+      </div>
+
+      <div class="card p-3 border-l-[6px] border-mintdeep">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-8 h-8 rounded-lg bg-mintsoft text-mintdeep flex items-center justify-center"><svg class="icon" style="width:15px;height:15px"><use href="#i-wrench"/></svg></div>
+          <div><h3 class="font-bold text-ink text-base">Server &amp; Tools</h3><p class="text-[11px] text-muted font-mono">Environment</p></div>
+        </div>
+        <ul class="space-y-1.5">
+          <li class="flex items-center gap-3 text-[12px]"><span class="w-1.5 h-1.5 rounded-full bg-mintdeep flex-none"></span><span class="font-bold w-24">Tomcat</span><span class="text-muted">Apache Tomcat 上で Dynamic Web Project として稼働</span></li>
+          <li class="flex items-center gap-3 text-[12px]"><span class="w-1.5 h-1.5 rounded-full bg-mintdeep flex-none"></span><span class="font-bold w-24">Eclipse</span><span class="text-muted">IDE / Eclipse Dynamic Web Project 構成</span></li>
+          <li class="flex items-center gap-3 text-[12px]"><span class="w-1.5 h-1.5 rounded-full bg-mintdeep flex-none"></span><span class="font-bold w-24">Bootstrap 5.3.3</span><span class="text-muted">CDN 読み込み + 独自 CSS 変数でテーマ拡張</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="why-servlet mt-1 bg-pinksoft border border-[#ffd7dd] rounded-lg p-2 flex items-start gap-3 relative z-10">
+      <svg class="icon text-pinkdeep flex-none mt-0.5" style="width:16px;height:16px"><use href="#i-target"/></svg>
+      <div>
+        <p class="text-[13px] font-bold text-ink">Why Servlet &amp; JSP?</p>
+        <p class="text-[11px] text-muted mt-0.5 leading-snug">Spring のような自動化された機能に頼るのではなく、Webアプリケーションの動作原理（Request / Response、Session など）を深く理解するために、素の Servlet / JSP を選択した。</p>
+      </div>
+    </div>
+  </div>
+  <div class="absolute bottom-0 w-full h-1 bg-gradient-to-r from-pink to-mint"></div>
+</div>
+</div>
+
+<!-- =========================================================
+     SLIDE 5 — 要件定義
+     ========================================================= -->
+<div class="slide-viewport">
+<div class="slide compact-req">
+  <div class="topbar"></div>
+
+  <div class="px-16 pt-10 pb-4 flex justify-between items-end border-b border-line bg-white relative z-10">
+    <div>
+      <span class="eyebrow block mb-1">Requirements Analysis</span>
+      <h1 class="font-display text-4xl font-black text-ink">要件定義 <span class="text-xl font-light text-muted ml-2">요구사항 분석</span></h1>
+    </div>
+    <div class="text-muted text-sm font-mono">03 · Requirements</div>
+  </div>
+
+  <div class="flex-1 px-16 py-2 bg-surface2 relative overflow-hidden flex gap-4">
+
+    <div class="w-[66%] flex flex-col z-10">
+      <div class="req-heading flex items-center gap-3 mb-2">
+        <div class="w-8 h-8 rounded-lg bg-pinksoft text-pinkdeep flex items-center justify-center"><svg class="icon" style="width:15px;height:15px"><use href="#i-grid"/></svg></div>
+        <h3 class="text-lg font-bold text-ink">機能要件 <span class="text-xs font-normal text-muted ml-1">Functional</span></h3>
+      </div>
+      <div class="card flex-1 overflow-hidden flex flex-col">
+        <table class="req-table">
+          <thead>
+            <tr><th style="width:16%">モジュール</th><th style="width:24%">機能</th><th>概要</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="font-bold text-ink">会員</span><br><span class="text-[10px] text-muted font-mono">Member</span></td><td>登録・ログイン・OAuth・メール認証</td><td>BCryptハッシュ化、セッション維持、Google/Line連携ログイン、認証コード発行・確認</td></tr>
+            <tr><td><span class="font-bold text-ink">掲示板</span><br><span class="text-[10px] text-muted font-mono">Board</span></td><td>CRUD・検索・閲覧数</td><td>タイトル/本文/作成者で検索、ROWNUMによるサーバー側ページング、詳細表示時に閲覧数加算</td></tr>
+            <tr><td><span class="font-bold text-ink">コメント</span><br><span class="text-[10px] text-muted font-mono">Comment</span></td><td>登録・削除</td><td>投稿単位でのコメントCRUD、投稿削除時の連鎖削除</td></tr>
+            <tr><td><span class="font-bold text-ink">リアクション</span><br><span class="text-[10px] text-muted font-mono">Reaction</span></td><td>いいね／よくないね</td><td>MERGE文でのupsert処理により1ユーザー1状態を保証</td></tr>
+            <tr><td><span class="font-bold text-ink">アニメ</span><br><span class="text-[10px] text-muted font-mono">Anime</span></td><td>検索・詳細・人気順</td><td>タイトルキーワード検索、お気に入り数に基づく人気ランキング</td></tr>
+            <tr><td><span class="font-bold text-ink">お気に入り</span><br><span class="text-[10px] text-muted font-mono">Favorite</span></td><td>追加・削除・一覧</td><td>マイページでの一覧表示、推薦アルゴリズムの入力データとして活用</td></tr>
+            <tr><td><span class="font-bold text-ink">推薦</span><br><span class="text-[10px] text-muted font-mono">Recommend</span></td><td>タグベース推薦</td><td>お気に入りと共通タグの多い順 → スコア順でランキング</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="w-[34%] flex flex-col z-10 gap-2">
+      <div class="nonfunc-heading flex items-center gap-3 mb-1">
+        <div class="w-8 h-8 rounded-lg bg-mintsoft text-mintdeep flex items-center justify-center"><svg class="icon" style="width:15px;height:15px"><use href="#i-shield"/></svg></div>
+        <h3 class="text-lg font-bold text-ink">非機能要件 <span class="text-xs font-normal text-muted ml-1 block">Non-Functional</span></h3>
+      </div>
+
+      <div class="card p-2.5 border-l-4 border-pink flex-1">
+        <h4 class="font-bold text-ink text-sm mb-1.5 flex items-center gap-2"><svg class="icon text-pinkdeep" style="width:15px;height:15px"><use href="#i-lock"/></svg>セキュリティ</h4>
+        <ul class="space-y-1.5">
+          <li class="flex items-start gap-2"><span class="chip !text-[10px] !py-0.5 !px-2 flex-none">暗号化</span><p class="text-[11px] text-ink/75 leading-snug">パスワードを BCrypt でハッシュ化して保存</p></li>
+          <li class="flex items-start gap-2"><span class="chip !text-[10px] !py-0.5 !px-2 flex-none">セッション</span><p class="text-[11px] text-ink/75 leading-snug">ログイン状態をセッションで管理し未認証アクセスを制御</p></li>
+          <li class="flex items-start gap-2"><span class="chip !text-[10px] !py-0.5 !px-2 flex-none">防御</span><p class="text-[11px] text-ink/75 leading-snug">全クエリ PreparedStatement 化で SQL Injection を防止</p></li>
+        </ul>
+      </div>
+
+      <div class="card p-2.5 border-l-4 border-mintdeep flex-1">
+        <h4 class="font-bold text-ink text-sm mb-1.5 flex items-center gap-2"><svg class="icon text-mintdeep" style="width:15px;height:15px"><use href="#i-gauge"/></svg>性能・使いやすさ</h4>
+        <ul class="space-y-1.5">
+          <li class="flex items-start gap-2"><span class="chip mint !text-[10px] !py-0.5 !px-2 flex-none">性能</span><p class="text-[11px] text-ink/75 leading-snug">掲示板はROWNUM、アニメ一覧はクライアント側3行単位でページング</p></li>
+          <li class="flex items-start gap-2"><span class="chip mint !text-[10px] !py-0.5 !px-2 flex-none">UI/UX</span><p class="text-[11px] text-ink/75 leading-snug">ダーク/ライトモード切り替え、レスポンシブ2/3/4列グリッド</p></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="absolute bottom-0 w-full h-1 bg-gradient-to-r from-pink to-mint"></div>
+</div>
+</div>
+
+<!-- =========================================================
+     SLIDE 6 — システムアーキテクチャ
+     ========================================================= -->
+<div class="slide-viewport">
+<div class="slide">
+  <div class="topbar"></div>
+
+  <div class="px-16 pt-10 pb-4 flex justify-between items-end border-b border-line bg-white relative z-10">
+    <div>
+      <span class="eyebrow block mb-1">System Architecture</span>
+      <h1 class="font-display text-4xl font-black text-ink">システムアーキテクチャ <span class="text-xl font-light text-muted ml-2">MVC パターン</span></h1>
+    </div>
+    <div class="text-muted text-sm font-mono">04 · Architecture</div>
+  </div>
+
+  <div class="flex-1 px-16 py-8 bg-surface2 relative flex flex-col justify-center gap-8">
+
+    <div class="flex items-stretch justify-between gap-5 relative z-10">
+
+      <div class="flex flex-col items-center justify-center gap-2 w-[130px] flex-none">
+        <div class="card w-full h-28 flex flex-col items-center justify-center border-t-4 border-ink">
+          <svg class="icon text-ink" style="width:28px;height:28px"><use href="#i-user"/></svg>
+          <p class="font-bold text-ink text-sm mt-1.5">Client</p>
+          <p class="text-[10px] text-muted font-mono">Browser</p>
+        </div>
+        <div class="text-[11px] text-pinkdeep font-bold flex items-center gap-1">Request<svg class="icon" style="width:11px;height:11px"><use href="#i-arrow"/></svg></div>
+        <div class="text-[11px] text-mintdeep font-bold flex items-center gap-1"><svg class="icon rotate-180" style="width:11px;height:11px"><use href="#i-arrow"/></svg>Response</div>
+      </div>
+
+      <div class="flex-1 fill-dashed relative flex flex-col justify-center px-6 py-8">
+        <div class="absolute -top-3 left-5 bg-white px-3 py-1 rounded border border-line text-[11px] font-bold text-muted flex items-center gap-1.5 font-mono"><svg class="icon" style="width:12px;height:12px"><use href="#i-server"/></svg>Apache Tomcat (WAS)</div>
+        <div class="flex items-center justify-center gap-3">
+          <div class="card w-40 p-3 border-l-4 border-pink">
+            <span class="chip !text-[10px] !py-0.5 !px-2 mb-1.5 inline-block">C</span>
+            <h4 class="font-bold text-ink text-sm">Controller</h4>
+            <p class="text-[10px] text-muted mb-1">Servlet</p>
+            <p class="text-[10px] text-muted/80 border-t border-line pt-1.5 leading-tight">URLマッピング<br>フロー制御</p>
+          </div>
+          <svg class="icon text-line flex-none" style="width:20px;height:20px;color:#cbc4e2"><use href="#i-arrow"/></svg>
+          <div class="card w-40 p-3 border-l-4 border-mintdeep">
+            <span class="chip mint !text-[10px] !py-0.5 !px-2 mb-1.5 inline-block">M</span>
+            <h4 class="font-bold text-ink text-sm">Service</h4>
+            <p class="text-[10px] text-muted mb-1">Business Logic</p>
+            <p class="text-[10px] text-muted/80 border-t border-line pt-1.5 leading-tight">Commandインタフェース<br>ロジック処理</p>
+          </div>
+          <svg class="icon text-line flex-none" style="width:20px;height:20px;color:#cbc4e2"><use href="#i-arrow"/></svg>
+          <div class="card w-40 p-3 border-l-4 border-pink">
+            <span class="chip !text-[10px] !py-0.5 !px-2 mb-1.5 inline-block">M</span>
+            <h4 class="font-bold text-ink text-sm">DAO</h4>
+            <p class="text-[10px] text-muted mb-1">Data Access</p>
+            <p class="text-[10px] text-muted/80 border-t border-line pt-1.5 leading-tight">JDBC 実行<br>PreparedStatement</p>
+          </div>
+        </div>
+        <div class="text-center mt-3">
+          <div class="card inline-block px-4 py-1.5 border-t-2 border-ink/20"><span class="chip dark !text-[10px] !py-0.5 !px-2">V</span> <span class="font-bold text-ink text-xs ml-1">View</span> <span class="text-[10px] text-muted">JSP / JSTL — 表示専用</span></div>
+        </div>
+      </div>
+
+      <div class="flex flex-col items-center justify-center gap-2 w-[130px] flex-none">
+        <div class="text-[11px] text-muted font-bold font-mono flex items-center gap-1"><svg class="icon" style="width:11px;height:11px"><use href="#i-refresh"/></svg>JDBC</div>
+        <div class="card w-full h-28 flex flex-col items-center justify-center border-t-4 border-mintdeep">
+          <svg class="icon text-mintdeep" style="width:28px;height:28px"><use href="#i-database"/></svg>
+          <p class="font-bold text-ink text-sm mt-1.5">Oracle DB</p>
+          <p class="text-[10px] text-muted font-mono">RDBMS</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-3 gap-4 relative z-10">
+      <div class="bg-pinksoft border border-[#ffd7dd] rounded-lg p-3 flex items-start gap-2.5">
+        <div class="w-5 h-5 rounded-full bg-pink text-white flex items-center justify-center text-[10px] font-bold flex-none mt-0.5">1</div>
+        <p class="text-[11.5px] text-ink/80 leading-snug"><span class="font-bold">Controller：</span>全リクエストの入口。入力を受け取り Service に処理を委譲し、結果に応じて View を選択する。</p>
+      </div>
+      <div class="bg-mintsoft border border-[#c9f2ea] rounded-lg p-3 flex items-start gap-2.5">
+        <div class="w-5 h-5 rounded-full bg-mintdeep text-white flex items-center justify-center text-[10px] font-bold flex-none mt-0.5">2</div>
+        <p class="text-[11.5px] text-ink/80 leading-snug"><span class="font-bold">Model（Service/DAO）：</span>ビジネスロジックと DB 処理を担当。DTO で層の間のデータをやり取りする。</p>
+      </div>
+      <div class="bg-surface2 border border-line rounded-lg p-3 flex items-start gap-2.5">
+        <div class="w-5 h-5 rounded-full bg-ink text-white flex items-center justify-center text-[10px] font-bold flex-none mt-0.5">3</div>
+        <p class="text-[11.5px] text-ink/80 leading-snug"><span class="font-bold">View（JSP）：</span>最終的な画面を生成。JSTL のみを用いてロジックを持たせず表示に専念する。</p>
+      </div>
+    </div>
+  </div>
+  <div class="absolute bottom-0 w-full h-1 bg-gradient-to-r from-pink to-mint"></div>
+</div>
+</div>
+
+<!-- =========================================================
+     SLIDE 7 — データベース設計
+     ========================================================= -->
+<div class="slide-viewport">
+<div class="slide">
+  <div class="topbar"></div>
+
+  <div class="px-16 pt-10 pb-4 flex justify-between items-end border-b border-line bg-white relative z-10">
+    <div>
+      <span class="eyebrow block mb-1">Database Design</span>
+      <h1 class="font-display text-4xl font-black text-ink">データベース設計 <span class="text-xl font-light text-muted ml-2">ERD</span></h1>
+    </div>
+    <div class="flex items-center gap-5">
+      <span class="text-[11px] font-bold flex items-center gap-1.5 text-pinkdeep"><span class="w-2.5 h-2.5 rounded-sm bg-pink inline-block"></span>PK</span>
+      <span class="text-[11px] font-bold flex items-center gap-1.5 text-mintdeep"><span class="w-2.5 h-2.5 rounded-sm bg-mintdeep inline-block"></span>FK</span>
+      <div class="text-muted text-sm font-mono">05 · Database</div>
+    </div>
+  </div>
+
+  <div class="flex-1 px-16 py-6 bg-surface2 relative overflow-hidden">
+    <div class="database-grid grid grid-cols-4 gap-4 relative z-10 mx-auto w-[1080px]">
+
+      <div class="entity-card">
+        <div class="entity-head bg-pinksoft text-pinkdeep"><span><svg class="icon" style="width:13px;height:13px"><use href="#i-user"/></svg> USER_TBL</span><span class="font-mono text-[10px]">会員</span></div>
+        <div class="entity-row"><span class="pk">USER_ID</span><span class="col">PK</span></div>
+        <div class="entity-row"><span class="col">PASSWORD</span><span class="col">BCrypt</span></div>
+        <div class="entity-row"><span class="col">NICKNAME</span><span class="col"></span></div>
+        <div class="entity-row"><span class="col">EMAIL</span><span class="col"></span></div>
+        <div class="entity-row"><span class="col">REG_DATE</span><span class="col"></span></div>
+      </div>
+
+      <div class="entity-card">
+        <div class="entity-head bg-mintsoft text-mintdeep"><span><svg class="icon" style="width:13px;height:13px"><use href="#i-heart"/></svg> ANIME</span><span class="font-mono text-[10px]">作品</span></div>
+        <div class="entity-row"><span class="pk">ANIME_ID</span><span class="col">PK</span></div>
+        <div class="entity-row"><span class="col">TITLE</span><span class="col"></span></div>
+        <div class="entity-row"><span class="col">SCORE</span><span class="col"></span></div>
+        <div class="entity-row"><span class="col">TYPE / YEAR</span><span class="col"></span></div>
+        <div class="entity-row"><span class="col">EPISODES</span><span class="col"></span></div>
+      </div>
+
+      <div class="entity-card">
+        <div class="entity-head bg-pinksoft text-pinkdeep"><span><svg class="icon" style="width:13px;height:13px"><use href="#i-book"/></svg> BOARD</span><span class="font-mono text-[10px]">掲示板</span></div>
+        <div class="entity-row"><span class="pk">BOARD_ID</span><span class="col">PK</span></div>
+        <div class="entity-row"><span class="fk">USER_ID</span><span class="col">FK → USER_TBL</span></div>
+        <div class="entity-row"><span class="col">TITLE / CONTENT</span><span class="col"></span></div>
+        <div class="entity-row"><span class="col">VIEW_COUNT</span><span class="col"></span></div>
+        <div class="entity-row"><span class="col">REG_DATE</span><span class="col"></span></div>
+      </div>
+
+      <div class="entity-card">
+        <div class="entity-head bg-mintsoft text-mintdeep"><span><svg class="icon" style="width:13px;height:13px"><use href="#i-comment"/></svg> BOARD_COMMENT</span><span class="font-mono text-[10px]">コメント</span></div>
+        <div class="entity-row"><span class="pk">COMMENT_ID</span><span class="col">PK</span></div>
+        <div class="entity-row"><span class="fk">BOARD_ID</span><span class="col">FK → BOARD</span></div>
+        <div class="entity-row"><span class="fk">USER_ID</span><span class="col">FK → USER_TBL</span></div>
+        <div class="entity-row"><span class="col">CONTENT</span><span class="col"></span></div>
+        <div class="entity-row"><span class="col">REG_DATE</span><span class="col"></span></div>
+      </div>
+
+      <div class="entity-card">
+        <div class="entity-head bg-pinksoft text-pinkdeep"><span><svg class="icon" style="width:13px;height:13px"><use href="#i-heart"/></svg> BOARD_REACTION</span><span class="font-mono text-[10px]">いいね</span></div>
+        <div class="entity-row"><span class="fk">BOARD_ID</span><span class="col">FK → BOARD</span></div>
+        <div class="entity-row"><span class="fk">USER_ID</span><span class="col">FK → USER_TBL</span></div>
+        <div class="entity-row"><span class="col">REACTION_TYPE</span><span class="col">LIKE / DISLIKE</span></div>
+        <div class="entity-row"><span class="col font-mono text-[10.5px]">MERGE で upsert</span><span class="col"></span></div>
+      </div>
+
+      <div class="entity-card">
+        <div class="entity-head bg-mintsoft text-mintdeep"><span><svg class="icon" style="width:13px;height:13px"><use href="#i-heart"/></svg> FAVORITE</span><span class="font-mono text-[10px]">お気に入り</span></div>
+        <div class="entity-row"><span class="fk">USER_ID</span><span class="col">FK → USER_TBL</span></div>
+        <div class="entity-row"><span class="fk">ANIME_ID</span><span class="col">FK → ANIME</span></div>
+        <div class="entity-row"><span class="col font-mono text-[10.5px]">複合キー</span><span class="col"></span></div>
+        <div class="entity-row"><span class="col font-mono text-[10.5px]">推薦の入力データ</span><span class="col"></span></div>
+      </div>
+
+      <div class="entity-card">
+        <div class="entity-head bg-pinksoft text-pinkdeep"><span><svg class="icon" style="width:13px;height:13px"><use href="#i-tag"/></svg> ANIME_TAG / TAG</span><span class="font-mono text-[10px]">タグ</span></div>
+        <div class="entity-row"><span class="fk">ANIME_ID</span><span class="col">FK → ANIME</span></div>
+        <div class="entity-row"><span class="fk">TAG_ID</span><span class="col">FK → TAG</span></div>
+        <div class="entity-row"><span class="col font-mono text-[10.5px]">多対多の中間テーブル</span><span class="col"></span></div>
+        <div class="entity-row"><span class="col font-mono text-[10.5px]">タグ一致数で推薦順を決定</span><span class="col"></span></div>
+      </div>
+
+      <div class="rounded-xl border border-dashed border-line bg-white/60 flex flex-col items-center justify-center text-center p-3 gap-1.5">
+        <svg class="icon text-muted" style="width:20px;height:20px"><use href="#i-link"/></svg>
+        <p class="text-[11px] text-muted leading-snug">USER_TBL / ANIME を中心に<br>4方向へ関係が広がる構造</p>
+      </div>
+    </div>
+  </div>
+  <div class="absolute bottom-0 w-full h-1 bg-gradient-to-r from-pink to-mint"></div>
+</div>
+</div>
+
+<!-- =========================================================
+     SLIDE 8 — 主要機能① アニメ検索・お気に入り・推薦
+     ========================================================= -->
+<div class="slide-viewport">
+<div class="slide">
+  <div class="topbar"></div>
+
+  <div class="px-16 pt-10 pb-4 flex justify-between items-end border-b border-line bg-white relative z-10">
+    <div>
+      <span class="eyebrow block mb-1">Core Feature 01</span>
+      <h1 class="font-display text-4xl font-black text-ink">アニメ検索・お気に入り・推薦 <span class="text-xl font-light text-muted ml-2">애니 검색/즐겨찾기/추천</span></h1>
+    </div>
+    <div class="text-muted text-sm font-mono">06 · Features</div>
+  </div>
+
+  <div class="flex-1 px-16 py-4 bg-surface2 relative overflow-hidden flex gap-8">
+
+    <div class="flex-1 relative z-10">
+      <div class="flex items-center gap-3 mb-3 pb-2 border-b border-line">
+        <div class="w-10 h-10 rounded-lg bg-pinksoft text-pinkdeep flex items-center justify-center"><svg class="icon" style="width:18px;height:18px"><use href="#i-search"/></svg></div>
+        <div><h3 class="font-bold text-ink text-lg">検索・一覧表示</h3><p class="text-[11px] text-muted font-mono">Search &amp; Listing</p></div>
+      </div>
+      <div class="card p-3.5">
+        <div class="process-step">
+          <span class="step-dot"></span>
+          <h4 class="font-bold text-ink text-sm">1. キーワード検索</h4>
+          <p class="text-[12px] text-muted mt-1">TITLE 列を対象に部分一致検索を実行</p>
+          <div class="code-box mt-1"><span class="kw">WHERE</span> title <span class="kw">LIKE</span> <span class="str">'%鬼滅%'</span></div>
+        </div>
+        <div class="process-step">
+          <span class="step-dot"></span>
+          <h4 class="font-bold text-ink text-sm">2. 人気ランキング</h4>
+          <p class="text-[12px] text-muted mt-1">FAVORITE の件数を集計して人気順に並び替え</p>
+        </div>
+        <div class="process-step">
+          <span class="step-dot"></span>
+          <h4 class="font-bold text-ink text-sm">3. カードグリッドのページネーション</h4>
+          <p class="text-[12px] text-muted mt-1">ビューポート幅から列数（2 / 3 / 4列）を判定し、常に3行分だけを表示</p>
+          <div class="flex gap-1.5 mt-2">
+            <span class="chip !text-[10px] !py-0.5 !px-2">2列（〜767px）</span>
+            <span class="chip !text-[10px] !py-0.5 !px-2">3列（768px〜）</span>
+            <span class="chip !text-[10px] !py-0.5 !px-2">4列（992px〜）</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex-1 relative z-10">
+      <div class="flex items-center gap-3 mb-3 pb-2 border-b border-line">
+        <div class="w-10 h-10 rounded-lg bg-mintsoft text-mintdeep flex items-center justify-center"><svg class="icon" style="width:18px;height:18px"><use href="#i-heart"/></svg></div>
+        <div><h3 class="font-bold text-ink text-lg">お気に入り &amp; タグ推薦</h3><p class="text-[11px] text-muted font-mono">Favorite &amp; Recommend</p></div>
+      </div>
+      <div class="card p-3.5">
+        <div class="process-step">
+          <span class="step-dot mint"></span>
+          <h4 class="font-bold text-ink text-sm">1. お気に入り登録・解除</h4>
+          <p class="text-[12px] text-muted mt-1">FAVORITE テーブルへの INSERT / DELETE で即時反映</p>
+        </div>
+        <div class="process-step">
+          <span class="step-dot mint"></span>
+          <h4 class="font-bold text-ink text-sm">2. タグベースの推薦アルゴリズム</h4>
+          <p class="text-[12px] text-muted mt-1">お気に入り作品と共通タグを多く持つ未お気に入り作品を抽出</p>
+          <div class="code-box mt-1"><span class="kw">ORDER BY</span> match_count <span class="kw">DESC</span>, score <span class="kw">DESC</span></div>
+        </div>
+        <div class="process-step">
+          <span class="step-dot mint"></span>
+          <h4 class="font-bold text-ink text-sm">3. マイページ連携</h4>
+          <p class="text-[12px] text-muted mt-1">お気に入り一覧をマイページに表示し、推薦の入力データとして再利用</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="absolute bottom-0 w-full h-1 bg-gradient-to-r from-pink to-mint"></div>
+</div>
+</div>
+
+<!-- =========================================================
+     SLIDE 9 — 主要機能② 掲示板・コメント
+     ========================================================= -->
+<div class="slide-viewport">
+<div class="slide compact-feature">
+  <div class="topbar"></div>
+
+  <div class="px-16 pt-10 pb-4 flex justify-between items-end border-b border-line bg-white relative z-10">
+    <div>
+      <span class="eyebrow block mb-1">Core Feature 02</span>
+      <h1 class="font-display text-4xl font-black text-ink">掲示板・コメント <span class="text-xl font-light text-muted ml-2">게시판/댓글</span></h1>
+    </div>
+    <div class="text-muted text-sm font-mono">07 · Features</div>
+  </div>
+
+  <div class="flex-1 px-16 py-4 bg-surface2 relative overflow-hidden flex gap-8">
+
+    <div class="flex-1 relative z-10">
+      <div class="flex items-center gap-3 mb-3 pb-2 border-b border-line">
+        <div class="w-10 h-10 rounded-lg bg-pinksoft text-pinkdeep flex items-center justify-center"><svg class="icon" style="width:18px;height:18px"><use href="#i-book"/></svg></div>
+        <div><h3 class="font-bold text-ink text-lg">掲示板機能</h3><p class="text-[11px] text-muted font-mono">Board</p></div>
+      </div>
+      <div class="card p-3.5">
+        <div class="process-step">
+          <span class="step-dot"></span>
+          <h4 class="font-bold text-ink text-sm">1. CRUD の実装</h4>
+          <p class="text-[12px] text-muted mt-1">作成・照会・修正・削除（本人の投稿のみ修正／削除可）</p>
+        </div>
+        <div class="process-step">
+          <span class="step-dot"></span>
+          <h4 class="font-bold text-ink text-sm">2. サーバー側ページング</h4>
+          <p class="text-[12px] text-muted mt-1">Oracle の ROWNUM を使い、必要な範囲だけを取得</p>
+          <div class="code-box mt-1"><span class="kw">WHERE</span> rnum <span class="kw">BETWEEN</span> ? <span class="kw">AND</span> ?</div>
+        </div>
+        <div class="process-step">
+          <span class="step-dot"></span>
+          <h4 class="font-bold text-ink text-sm">3. 検索・閲覧数</h4>
+          <p class="text-[12px] text-muted mt-1">タイトル/本文/作成者で検索し、詳細表示のたびに閲覧数を加算</p>
+        </div>
+        <div class="process-step">
+          <span class="step-dot"></span>
+          <h4 class="font-bold text-ink text-sm">4. いいね／よくないね</h4>
+          <p class="text-[12px] text-muted mt-1">BOARD_REACTION を MERGE 文で upsert し、1ユーザー1状態を維持</p>
+          <div class="code-box mt-1"><span class="kw">MERGE INTO</span> board_reaction <span class="kw">USING</span> dual ...</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex-1 relative z-10">
+      <div class="flex items-center gap-3 mb-3 pb-2 border-b border-line">
+        <div class="w-10 h-10 rounded-lg bg-mintsoft text-mintdeep flex items-center justify-center"><svg class="icon" style="width:18px;height:18px"><use href="#i-comment"/></svg></div>
+        <div><h3 class="font-bold text-ink text-lg">コメント機能</h3><p class="text-[11px] text-muted font-mono">Comment</p></div>
+      </div>
+      <div class="card p-3.5">
+        <div class="process-step">
+          <span class="step-dot mint"></span>
+          <h4 class="font-bold text-ink text-sm">1. コメント登録</h4>
+          <p class="text-[12px] text-muted mt-1">投稿詳細ページから即時に登録・DB保存</p>
+          <div class="code-box mt-1"><span class="kw">INSERT INTO</span> board_comment ...</div>
+        </div>
+        <div class="process-step">
+          <span class="step-dot mint"></span>
+          <h4 class="font-bold text-ink text-sm">2. コメント一覧照会</h4>
+          <p class="text-[12px] text-muted mt-1">BOARD_ID を外部キーとして関連コメントを取得</p>
+          <div class="flex items-center gap-2 mt-2">
+            <div class="flex-1 bg-pinksoft rounded-md p-2 text-center border border-[#ffd7dd]"><div class="text-[9px] text-pinkdeep">BOARD</div><div class="text-[11px] font-bold text-ink font-mono">PK: BOARD_ID</div></div>
+            <svg class="icon text-muted" style="width:14px;height:14px"><use href="#i-link"/></svg>
+            <div class="flex-1 bg-mintsoft rounded-md p-2 text-center border border-[#c9f2ea]"><div class="text-[9px] text-mintdeep">COMMENT</div><div class="text-[11px] font-bold text-ink font-mono">FK: BOARD_ID</div></div>
+          </div>
+        </div>
+        <div class="process-step">
+          <span class="step-dot mint"></span>
+          <h4 class="font-bold text-ink text-sm">3. 権限チェック</h4>
+          <p class="text-[12px] text-muted mt-1">セッションのログインユーザーとコメント作成者を照合</p>
+        </div>
+        <div class="process-step">
+          <span class="step-dot mint"></span>
+          <h4 class="font-bold text-ink text-sm">4. 連鎖削除</h4>
+          <p class="text-[12px] text-muted mt-1">投稿削除時に該当コメントを一括削除し整合性を保持</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="absolute bottom-0 w-full h-1 bg-gradient-to-r from-pink to-mint"></div>
+</div>
+</div>
+
+<!-- =========================================================
+     SLIDE 10 — 主要機能③ 会員・認証・UIテーマ
+     ========================================================= -->
+<div class="slide-viewport">
+<div class="slide compact-feature">
+  <div class="topbar"></div>
+
+  <div class="px-16 pt-10 pb-4 flex justify-between items-end border-b border-line bg-white relative z-10">
+    <div>
+      <span class="eyebrow block mb-1">Core Feature 03</span>
+      <h1 class="font-display text-4xl font-black text-ink">会員・認証・UIテーマ <span class="text-xl font-light text-muted ml-2">회원/인증/UI 테마</span></h1>
+    </div>
+    <div class="text-muted text-sm font-mono">08 · Features</div>
+  </div>
+
+  <div class="flex-1 px-16 py-4 bg-surface2 relative overflow-hidden flex gap-8">
+
+    <div class="flex-1 relative z-10">
+      <div class="flex items-center gap-3 mb-3 pb-2 border-b border-line">
+        <div class="w-10 h-10 rounded-lg bg-pinksoft text-pinkdeep flex items-center justify-center"><svg class="icon" style="width:18px;height:18px"><use href="#i-lock"/></svg></div>
+        <div><h3 class="font-bold text-ink text-lg">会員・認証</h3><p class="text-[11px] text-muted font-mono">Member &amp; Auth</p></div>
+      </div>
+      <div class="card p-3.5">
+        <div class="process-step">
+          <span class="step-dot"></span>
+          <h4 class="font-bold text-ink text-sm">1. パスワード暗号化</h4>
+          <p class="text-[12px] text-muted mt-1">登録時に jBCrypt でハッシュ化し、照合時も同ロジックで検証</p>
+          <div class="code-box mt-1">password = <span class="kw">BCrypt</span>.hashpw(pw, <span class="kw">BCrypt</span>.gensalt())</div>
+        </div>
+        <div class="process-step">
+          <span class="step-dot"></span>
+          <h4 class="font-bold text-ink text-sm">2. セッションログイン</h4>
+          <p class="text-[12px] text-muted mt-1">HttpSession に userid / nickname を保持し、ページ側で表示を分岐</p>
+        </div>
+        <div class="process-step">
+          <span class="step-dot"></span>
+          <h4 class="font-bold text-ink text-sm">3. メールアドレス認証</h4>
+          <p class="text-[12px] text-muted mt-1">認証コードを送信・照合して本人確認を実施</p>
+          <div class="flex items-center gap-1.5 mt-2 text-[11px] text-muted"><svg class="icon text-pinkdeep" style="width:13px;height:13px"><use href="#i-mail"/></svg>MailSender / MailConfig</div>
+        </div>
+        <div class="process-step">
+          <span class="step-dot"></span>
+          <h4 class="font-bold text-ink text-sm">4. ソーシャルログイン（OAuth）</h4>
+          <p class="text-[12px] text-muted mt-1">Google / Line アカウントでの連携ログインに対応</p>
+          <div class="flex gap-1.5 mt-2">
+            <span class="chip !text-[10px] !py-0.5 !px-2">Google OAuth</span>
+            <span class="chip mint !text-[10px] !py-0.5 !px-2">Line OAuth</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex-1 relative z-10">
+      <div class="flex items-center gap-3 mb-3 pb-2 border-b border-line">
+        <div class="w-10 h-10 rounded-lg bg-mintsoft text-mintdeep flex items-center justify-center"><svg class="icon" style="width:18px;height:18px"><use href="#i-sun"/></svg></div>
+        <div><h3 class="font-bold text-ink text-lg">ダーク／ライトモード UI</h3><p class="text-[11px] text-muted font-mono">Theme Tokens</p></div>
+      </div>
+      <div class="card p-4">
+        <p class="text-[12.5px] text-muted mb-4">CSS カスタムプロパティ（<code class="font-mono text-[11px] bg-surface2 px-1 rounded">--bg / --surface / --text / --accent</code> 等）を <code class="font-mono text-[11px] bg-surface2 px-1 rounded">body.light-mode</code> の有無で丸ごと切り替え、全ページに一括反映する。</p>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div class="rounded-xl overflow-hidden border border-line">
+            <div class="px-3 py-2 flex items-center justify-between" style="background:#f5f4fb;border-bottom:1px solid #e3dff0;">
+              <span class="text-[11px] font-bold flex items-center gap-1.5" style="color:#221d34"><svg class="icon" style="width:12px;height:12px"><use href="#i-sun"/></svg>Light</span>
+              <span class="text-[9px] font-mono" style="color:#6c6484">light-mode</span>
+            </div>
+            <div class="p-3 flex flex-col gap-2" style="background:#f5f4fb;">
+              <div class="rounded-lg p-2.5" style="background:#ffffff;border:1px solid #e3dff0;">
+                <div class="h-2 w-16 rounded" style="background:#ff6b81;"></div>
+                <div class="h-1.5 w-24 rounded mt-2" style="background:#e3dff0;"></div>
+                <div class="h-1.5 w-20 rounded mt-1.5" style="background:#e3dff0;"></div>
+              </div>
+              <div class="flex gap-1.5">
+                <span class="w-5 h-5 rounded-full" style="background:#ff6b81;"></span>
+                <span class="w-5 h-5 rounded-full" style="background:#6ee7d8;"></span>
+                <span class="w-5 h-5 rounded-full" style="background:#221d34;"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="rounded-xl overflow-hidden border" style="border-color:#332c4a;">
+            <div class="px-3 py-2 flex items-center justify-between" style="background:#14111f;border-bottom:1px solid #332c4a;">
+              <span class="text-[11px] font-bold flex items-center gap-1.5" style="color:#f2eefb"><svg class="icon" style="width:12px;height:12px"><use href="#i-moon"/></svg>Dark</span>
+              <span class="text-[9px] font-mono" style="color:#9c93b8">default</span>
+            </div>
+            <div class="p-3 flex flex-col gap-2" style="background:#14111f;">
+              <div class="rounded-lg p-2.5" style="background:#1e1a2e;border:1px solid #332c4a;">
+                <div class="h-2 w-16 rounded" style="background:#ff6b81;"></div>
+                <div class="h-1.5 w-24 rounded mt-2" style="background:#332c4a;"></div>
+                <div class="h-1.5 w-20 rounded mt-1.5" style="background:#332c4a;"></div>
+              </div>
+              <div class="flex gap-1.5">
+                <span class="w-5 h-5 rounded-full" style="background:#ff6b81;"></span>
+                <span class="w-5 h-5 rounded-full" style="background:#6ee7d8;"></span>
+                <span class="w-5 h-5 rounded-full" style="background:#f2eefb;"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 bg-surface2 rounded-lg p-3 flex items-start gap-2.5">
+          <svg class="icon text-mintdeep flex-none mt-0.5" style="width:15px;height:15px"><use href="#i-check"/></svg>
+          <p class="text-[11.5px] text-muted leading-relaxed">WCAG コントラスト比を検証し、両モードともテキストが十分な可読性を確保するよう調整済み。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="absolute bottom-0 w-full h-1 bg-gradient-to-r from-pink to-mint"></div>
+</div>
+</div>
+
+<!-- =========================================================
+     SLIDE 11 — デモンストレーション
+     (YouTube 영상 삽입 완료)
+     ========================================================= -->
+<div class="slide-viewport">
+<div class="slide">
+  <div class="topbar"></div>
+
+  <div class="px-16 pt-10 pb-4 flex justify-between items-end border-b border-line bg-white relative z-10">
+    <div>
+      <span class="eyebrow block mb-1">Demonstration</span>
+      <h1 class="font-display text-4xl font-black text-ink">デモンストレーション <span class="text-xl font-light text-muted ml-2">시연</span></h1>
+    </div>
+    <div class="text-muted text-sm font-mono">09 · Demo</div>
+  </div>
+
+  <div class="flex-1 px-16 py-8 bg-surface2 relative overflow-hidden flex items-center gap-10">
+
+    <div class="video-embed flex-none" style="width:640px;height:360px;border-radius:12px;overflow:hidden;box-shadow:0 10px 24px -18px rgba(34,29,52,.35);border:1px solid #e3dff0;">
+      <iframe src="https://www.youtube.com/embed/JTKi8fH5a6U"
+              style="width:100%;height:100%;border:0" allowfullscreen></iframe>
+    </div>
+
+    <div class="flex-1 flex flex-col gap-3 relative z-10">
+      <p class="text-[12px] font-bold text-muted uppercase tracking-wide font-mono mb-1">Demo Highlights</p>
+      <div class="flex items-center gap-2.5 chip !text-[13px] !py-2 !px-4 w-fit"><svg class="icon" style="width:14px;height:14px"><use href="#i-search"/></svg>アニメ検索 → 詳細 → お気に入り登録</div>
+      <div class="flex items-center gap-2.5 chip mint !text-[13px] !py-2 !px-4 w-fit"><svg class="icon" style="width:14px;height:14px"><use href="#i-comment"/></svg>掲示板 投稿作成 → コメント → いいね</div>
+      <div class="flex items-center gap-2.5 chip dark !text-[13px] !py-2 !px-4 w-fit"><svg class="icon" style="width:14px;height:14px"><use href="#i-sun"/></svg>ダーク／ライトモード 切り替え</div>
+    </div>
+  </div>
+  <div class="absolute bottom-0 w-full h-1 bg-gradient-to-r from-pink to-mint"></div>
+</div>
+</div>
+
+<!-- =========================================================
+     SLIDE 12 — まとめ・今後の展望
+     ========================================================= -->
+<div class="slide-viewport">
+<div class="slide">
+  <div class="topbar"></div>
+  <div class="glow" style="width:320px;height:320px;background:radial-gradient(circle,rgba(255,107,129,.12),transparent 70%);top:-100px;right:-60px;"></div>
+  <div class="glow" style="width:280px;height:280px;background:radial-gradient(circle,rgba(110,231,216,.16),transparent 70%);bottom:-90px;left:-60px;"></div>
+
+  <div class="px-16 pt-10 pb-4 flex justify-between items-end border-b border-line bg-white relative z-10">
+    <div>
+      <span class="eyebrow block mb-1">Conclusion</span>
+      <h1 class="font-display text-4xl font-black text-ink">まとめ・今後の展望 <span class="text-xl font-light text-muted ml-2">마무리</span></h1>
+    </div>
+    <div class="text-muted text-sm font-mono">10 · Conclusion</div>
+  </div>
+
+  <div class="flex-1 px-16 py-7 relative overflow-hidden flex flex-col justify-center gap-5">
+    <div class="grid grid-cols-2 gap-5 relative z-10">
+      <div class="card p-5 border-t-4 border-pink">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-10 h-10 rounded-lg bg-pinksoft text-pinkdeep flex items-center justify-center"><svg class="icon" style="width:18px;height:18px"><use href="#i-medal"/></svg></div>
+          <h3 class="font-bold text-ink text-lg">学んだこと</h3>
+        </div>
+        <ul class="space-y-2">
+          <li class="check-li"><svg class="icon" style="width:14px;height:14px"><use href="#i-check"/></svg><p class="text-[13px] text-ink/80">Servlet/JSP を素の状態から実装し、MVC の役割分担を体感できた</p></li>
+          <li class="check-li"><svg class="icon" style="width:14px;height:14px"><use href="#i-check"/></svg><p class="text-[13px] text-ink/80">Oracle の ROWNUM / MERGE など実務寄りの SQL パターンを習得</p></li>
+          <li class="check-li"><svg class="icon" style="width:14px;height:14px"><use href="#i-check"/></svg><p class="text-[13px] text-ink/80">BCrypt・セッション・OAuth など認証まわりを一通り実装</p></li>
+          <li class="check-li"><svg class="icon" style="width:14px;height:14px"><use href="#i-check"/></svg><p class="text-[13px] text-ink/80">CSS トークン設計によるダーク／ライト両対応 UI を構築</p></li>
+        </ul>
+      </div>
+
+      <div class="card p-5 border-t-4 border-mintdeep">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-10 h-10 rounded-lg bg-mintsoft text-mintdeep flex items-center justify-center"><svg class="icon" style="width:18px;height:18px"><use href="#i-flag"/></svg></div>
+          <h3 class="font-bold text-ink text-lg">今後の改善計画</h3>
+        </div>
+        <ul class="space-y-2">
+          <li class="check-li"><svg class="icon" style="width:14px;height:14px"><use href="#i-check"/></svg><p class="text-[13px] text-ink/80">コネクションプール（HikariCP 等）の導入によるDB接続の効率化</p></li>
+          <li class="check-li"><svg class="icon" style="width:14px;height:14px"><use href="#i-check"/></svg><p class="text-[13px] text-ink/80">掲示板への画像添付・ファイルアップロード機能の追加</p></li>
+          <li class="check-li"><svg class="icon" style="width:14px;height:14px"><use href="#i-check"/></svg><p class="text-[13px] text-ink/80">コメント／リアクションの通知機能の実装</p></li>
+          <li class="check-li"><svg class="icon" style="width:14px;height:14px"><use href="#i-check"/></svg><p class="text-[13px] text-ink/80">主要ロジックに対するユニットテストの追加</p></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="text-center relative z-10 pt-2">
+      <p class="font-display text-3xl font-black text-ink">ご清聴ありがとうございました</p>
+      <p class="text-sm text-muted mt-2 font-mono">Thank you — ANIVERSE by ジョン・ギヒョン、キム・ジュンヒョク、ジョ・ムンジュン、ジョン・スンファン ／ 2026.7.30 ～ 2026.9.20</p>
+    </div>
+  </div>
+  <div class="absolute bottom-0 w-full h-[10px] bg-gradient-to-r from-pink via-[#ff9db0] to-mint"></div>
+</div>
+</div>
+
+</div>
