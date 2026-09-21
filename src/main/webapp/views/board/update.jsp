@@ -101,12 +101,7 @@ textarea.write-input {
 
 
 <!-- 게시글 수정 -->
-<section class="section container req-anchor">
-
-    <span class="req-id">
-        BOARD-004
-    </span>
-
+<section class="section container">
 
     <div class="board-write">
 
@@ -176,7 +171,7 @@ textarea.write-input {
 
                     <a
                         href="${pageContext.request.contextPath}/board/detail.do?boardId=${board.boardId}"
-                        class="btn btn-outline-secondary">
+                        class="btn btn-outline-soft">
 
                         キャンセル
 

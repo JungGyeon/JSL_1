@@ -36,8 +36,7 @@ request.setAttribute("activePage", "mypage");
 
 	<%@ include file="/common/header.jsp"%>
 
-	<section class="section container req-anchor">
-		<span class="req-id">MY-001 · MY-002 · FAV-003</span>
+	<section class="section container">
 
 		<div class="d-flex align-items-center gap-3 mb-3">
 			<div class="avatar-ring">
@@ -97,7 +96,7 @@ request.setAttribute("activePage", "mypage");
 				</div>
 			</c:when>
 			<c:otherwise>
-				<div class="row g-3">
+				<div id="animeGrid" class="row g-3 anime-card-grid">
 					<c:forEach var="anime" items="${list}">
 						<div class="col-6 col-md-4 col-lg-3">
 							<div style="position: relative;">
@@ -105,7 +104,7 @@ request.setAttribute("activePage", "mypage");
 									href="${pageContext.request.contextPath}/anime/detail.do?animeId=${anime.animeId}">
 
 									<div class="poster"
-										style="background-image:url('${anime.thumbnail}'); background-size:cover; background-position:center;">
+										style="background-image:url('${anime.picture}'); background-size:cover; background-position:center;">
 										<span class="score-badge">★ ${anime.score}</span>
 										<div class="poster-title">${anime.title}</div>
 									</div>
@@ -119,6 +118,7 @@ request.setAttribute("activePage", "mypage");
 						</div>
 					</c:forEach>
 				</div>
+				<div id="animeGridPagination" class="card-pagination"></div>
 			</c:otherwise>
 		</c:choose>
 	</section>

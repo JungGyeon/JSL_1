@@ -26,10 +26,6 @@ if (activePage == null) {
 
 		<div class="d-flex align-items-center gap-2 order-md-3">
 
-			<button class="spec-toggle" id="specToggleBtn" type="button"
-				onclick="toggleSpec()" title="画面に要件ID(例: ANI-001)を表示します">⌘
-				仕様書オーバーレイ</button>
-
 			<c:choose>
 				<c:when test="${not empty sessionScope.userid}">
 					<span class="text-muted small me-2 d-none d-sm-inline">${sessionScope.nickname}さん</span>

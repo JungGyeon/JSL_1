@@ -22,6 +22,7 @@ public class RecommendDAO {
 				+ "    A.TITLE,\n"
 				+ "    A.SCORE,\n"
 				+ "    A.THUMBNAIL,\n"
+				+ "    A.PICTURE,\n"
 				+ "    A.TYPE,\n"
 				+ "    A.YEAR,\n"
 				+ "    A.EPISODES,\n"
@@ -44,7 +45,7 @@ public class RecommendDAO {
 				+ "    WHERE FV.USER_ID = ?\n"
 				+ "      AND FV.ANIME_ID = A.ANIME_ID\n"
 				+ ")\n"
-				+ "GROUP BY A.ANIME_ID, A.TITLE, A.SCORE, A.THUMBNAIL, A.TYPE, A.YEAR, A.EPISODES\n"
+				+ "GROUP BY A.ANIME_ID, A.TITLE, A.SCORE, A.THUMBNAIL, A.PICTURE, A.TYPE, A.YEAR, A.EPISODES\n"
 				+ "ORDER BY MATCH_COUNT DESC, A.SCORE DESC\n";
 
 		try {
@@ -63,6 +64,7 @@ public class RecommendDAO {
 				dto.setTitle(rs.getString("title"));
 				dto.setScore(rs.getDouble("score"));
 				dto.setThumbnail(rs.getString("thumbnail"));
+				dto.setPicture(rs.getString("picture"));
 				dto.setType(rs.getString("type"));
 				dto.setYear(rs.getInt("year"));
 				dto.setEpisodes(rs.getInt("episodes"));

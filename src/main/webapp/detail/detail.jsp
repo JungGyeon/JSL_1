@@ -32,19 +32,11 @@
 	<section class="section container">
 
 		<c:if test="${not empty anime}">
-			<div class="req-anchor mb-3">
-				<span class="req-id">ANI-007 · FAV-001 · FAV-002 · FAV-004</span>
-			</div>
 			<div class="row g-4">
 				<div class="col-md-4">
 					<div style="max-width: 280px;">
 						<c:choose>
-							<c:when test="${not empty anime.thumbnail}">
-								<div class="poster"
-									style="background-image:url('${anime.thumbnail}'); background-size:cover; background-position:center;">
-									<span class="score-badge">★ ${anime.score}</span>
-								</div>
-							</c:when>
+							
 
 							<c:when test="${not empty anime.picture}">
 								<div class="poster"

@@ -102,42 +102,64 @@
 
         /* 좋아요 */
         .like-btn {
-            background-color: #e7f5ff;
-            border-color: #4dabf7;
-            color: #1971c2;
+            background-color: rgba(255, 107, 129, .08);
+            border-color: var(--accent);
+            color: var(--accent);
         }
 
         .like-btn:hover {
-            background-color: #4dabf7;
-            color: #ffffff;
+            background-color: var(--accent);
+            color: #1a0f14;
         }
 
         /* 애매해요 */
         .maybe-btn {
-            background-color: #fff9db;
-            border-color: #ffc107;
-            color: #b58105;
+            background-color: rgba(110, 231, 216, .08);
+            border-color: var(--accent-2-deep);
+            color: var(--accent-2);
         }
 
         .maybe-btn:hover {
-            background-color: #ffc107;
-            color: #212529;
+            background-color: var(--accent-2);
+            color: #0f2622;
         }
 
         /* 싫어요 */
         .dislike-btn {
-            background-color: #fff5f5;
-            border-color: #ff8787;
-            color: #c92a2a;
+            background-color: rgba(255, 135, 135, .08);
+            border-color: #6b2532;
+            color: #ffb4c0;
         }
 
         .dislike-btn:hover {
-            background-color: #ff8787;
-            color: #ffffff;
+            background-color: #6b2532;
+            color: #ffe3e8;
         }
 
         .comment-area {
             color: var(--text);
+        }
+
+        .comment-area textarea.form-control,
+        .comment-area .form-control {
+            background: var(--surface-2);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .comment-area .form-control::placeholder {
+            color: var(--text-muted);
+        }
+
+        .comment-area .form-control:focus {
+            background: var(--surface-2);
+            color: var(--text);
+            border-color: var(--accent-2-deep);
+            box-shadow: 0 0 0 .2rem rgba(110, 231, 216, .12);
+        }
+
+        .comment-area .border-top {
+            border-color: var(--border) !important;
         }
 
         .detail-buttons {
@@ -200,9 +222,7 @@
     </section>
 
     <!-- 게시글 상세 -->
-    <section class="section container req-anchor">
-
-        <span class="req-id">BOARD-003</span>
+    <section class="section container">
 
         <div class="board-detail">
 
@@ -330,7 +350,7 @@
 
                                 <div class="text-end">
                                     <button type="submit"
-                                            class="btn btn-primary">
+                                            class="btn btn-accent">
                                         コメントする
                                     </button>
                                 </div>
@@ -343,7 +363,7 @@
 
                             <div class="text-center text-muted py-3">
                                 コメントを作成するにはログインが必要です。
-                                <a href="${pageContext.request.contextPath}/member/loginForm.do">
+                                <a class="link-accent" href="${pageContext.request.contextPath}/member/loginForm.do">
                                     ログイン
                                 </a>
                             </div>
@@ -382,14 +402,14 @@
 
                                         <!-- 댓글 수정 -->
                                         <button type="button"
-                                                class="btn btn-sm btn-primary"
+                                                class="btn btn-sm btn-outline-soft"
                                                 onclick="showCommentEdit('${comment.commentId}')">
                                             編集
                                         </button>
 
                                         <!-- 댓글 삭제 -->
                                         <a href="${pageContext.request.contextPath}/board/commentDelete.do?commentId=${comment.commentId}&boardId=${comment.boardId}"
-                                           class="btn btn-sm btn-danger"
+                                           class="btn btn-sm btn-danger-soft"
                                            onclick="return confirm('コメントを削除しますか？');">
                                             削除
                                         </a>
@@ -420,12 +440,12 @@
                                             <div class="mt-2 text-end">
 
                                                 <button type="submit"
-                                                        class="btn btn-sm btn-success">
+                                                        class="btn btn-sm btn-accent">
                                                     保存
                                                 </button>
 
                                                 <button type="button"
-                                                        class="btn btn-sm btn-secondary"
+                                                        class="btn btn-sm btn-outline-soft"
                                                         onclick="hideCommentEdit('${comment.commentId}')">
                                                     キャンセル
                                                 </button>
@@ -460,7 +480,7 @@
 
                     <!-- 목록 -->
                     <a href="${pageContext.request.contextPath}/board/list.do"
-                       class="btn btn-outline-secondary">
+                       class="btn btn-outline-soft">
                         一覧へ
                     </a>
 
@@ -472,7 +492,7 @@
 
                             <!-- 수정 -->
                             <a href="${pageContext.request.contextPath}/board/update.do?boardId=${board.boardId}"
-                               class="btn btn-primary">
+                               class="btn btn-accent">
                                 修正する
                             </a>
 
@@ -486,7 +506,7 @@
                                        value="${board.boardId}">
 
                                 <button type="submit"
-                                        class="btn btn-danger"
+                                        class="btn btn-danger-soft"
                                         onclick="return confirm('この記事を削除しますか？');">
                                     削除する
                                 </button>

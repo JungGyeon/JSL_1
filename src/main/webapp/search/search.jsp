@@ -66,9 +66,7 @@ String encodedBack = java.net.URLEncoder.encode(backUrl, "UTF-8");
 			<h2 class="mb-0">アニメ検索</h2>
 		</div>
 	</section>
-	<section class="section container req-anchor">
-
-		<span class="req-id">ANI-002~006 · SYS-003</span>
+	<section class="section container">
 
 		<!-- 검색 영역 -->
 		<div class="surface p-3 p-md-4 mb-4">
@@ -130,7 +128,7 @@ String encodedBack = java.net.URLEncoder.encode(backUrl, "UTF-8");
 		<%
 		if (list != null && !list.isEmpty()) {
 		%>
-		<div class="row g-3">
+		<div id="animeGrid" class="row g-3 anime-card-grid">
 			<%
 			for (AnimeDTO anime : list) {
 				boolean isFav = (favIds != null && favIds.contains(anime.getAnimeId()));
@@ -140,7 +138,7 @@ String encodedBack = java.net.URLEncoder.encode(backUrl, "UTF-8");
 					<a class="anime-card"
 						href="<%=request.getContextPath()%>/anime/detail.do?animeId=<%=anime.getAnimeId()%>">
 						<div class="poster"
-							style="background-image:url('<%=anime.getThumbnail() != null ? anime.getThumbnail() : ""%>'); background-size:cover; background-position:center;">
+							style="background-image:url('<%=anime.getPicture() != null ? anime.getPicture() : ""%>'); background-size:cover; background-position:center;">
 							<span class="score-badge">★ <%=anime.getScore()%></span>
 							<div class="poster-title"><%=anime.getTitle()%></div>
 						</div>
@@ -174,6 +172,7 @@ String encodedBack = java.net.URLEncoder.encode(backUrl, "UTF-8");
 			}
 			%>
 		</div>
+		<div id="animeGridPagination" class="card-pagination"></div>
 		<%
 		} else {
 		%>

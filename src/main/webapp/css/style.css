@@ -23,6 +23,14 @@ h1,h2,h3,h4,.brand,.display{
 .mono{font-family:'JetBrains Mono',monospace;}
 a{text-decoration:none;}
 
+/* ---- Dark-mode readability fixes ----
+   Bootstrap's default .text-muted (#6c757d) and default input placeholder
+   color are tuned for a light background and read as low-contrast / barely
+   visible on this site's dark background. Force them onto the theme's own
+   (properly-contrasted) muted color instead. */
+.text-muted{color:var(--text-muted)!important;}
+.form-control-custom::placeholder{color:var(--text-muted); opacity:1;}
+
 /* ---- Nav ---- */
 .navbar-custom{
   background:rgba(20,17,31,.9);
@@ -43,39 +51,6 @@ a{text-decoration:none;}
   color:var(--text)!important;
   background:var(--surface-2);
 }
-.spec-toggle{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.72rem;
-  border:1px solid var(--border);
-  color:var(--text-muted);
-  background:transparent;
-  border-radius:20px;
-  padding:.3rem .8rem;
-  cursor:pointer;
-  transition:.15s;
-}
-.spec-toggle.on{
-  color:var(--accent-2);
-  border-color:var(--accent-2-deep);
-  background:rgba(110,231,216,.08);
-}
-
-.req-id{
-  display:none;
-  font-family:'JetBrains Mono',monospace;
-  font-size:.66rem;
-  color:var(--accent-2);
-  background:rgba(110,231,216,.08);
-  border:1px solid var(--accent-2-deep);
-  padding:.15rem .5rem;
-  border-radius:4px;
-  letter-spacing:.05em;
-  white-space:nowrap;
-}
-body.spec-mode .req-id{display:inline-block;}
-.req-anchor{position:relative;}
-.req-anchor > .req-id{position:absolute; top:-.6rem; right:.5rem;}
-
 /* ---- Sections ---- */
 .section{padding:3rem 0;}
 .surface{background:var(--surface); border:1px solid var(--border); border-radius:16px;}
@@ -118,6 +93,55 @@ body.spec-mode .req-id{display:inline-block;}
   background:transparent;
 }
 .btn-outline-soft:hover{border-color:var(--accent-2-deep); color:var(--accent-2); background:rgba(110,231,216,.06);}
+
+.btn-danger-soft{
+  border:1px solid #6b2532; color:#ffb4c0; border-radius:50px;
+  background:rgba(255,135,135,.08);
+}
+.btn-danger-soft:hover{background:#6b2532; color:#ffe3e8; border-color:#8a3040;}
+
+.link-accent{color:var(--accent-2);}
+.link-accent:hover{color:var(--accent-2); text-decoration:underline;}
+
+/* ---- Card grid pagination (list / search / recommend / mypage) ----
+   버튼끼리 서로 붙어 경계가 뭉개지지 않도록 간격을 주고, 배경을 surface-2로
+   올려서 페이지 배경(--bg)과의 명암비를 라이트/다크 모드 모두에서 충분히
+   확보한다. */
+.card-pagination{
+  margin-top:28px;
+  display:flex;
+  justify-content:center;
+}
+.card-pagination .pagination{
+  margin-bottom:0;
+  flex-wrap:wrap;
+  gap:6px;
+}
+.card-pagination .page-item{margin:0;}
+.card-pagination .page-link{
+  background:var(--surface-2); color:var(--text); border:1px solid var(--border);
+  border-radius:8px;
+  min-width:38px; height:38px;
+  display:flex; align-items:center; justify-content:center;
+  padding:0 8px;
+  font-weight:600;
+  transition:.15s;
+}
+.card-pagination .page-link:hover{
+  background:var(--surface);
+  border-color:var(--text-muted);
+  color:var(--text);
+}
+.card-pagination .page-item.disabled .page-link{
+  background:var(--surface-2); color:var(--text-muted); border-color:var(--border);
+  opacity:.45; pointer-events:none;
+}
+/* 현재 페이지: 초록(accent-2) 대신 라이트/다크 모드의 기본 텍스트/배경을
+   서로 반전시켜 채운다 - 다크 모드에서는 밝은 필, 라이트 모드에서는
+   어두운 필로 자동으로 맞춰진다. */
+.card-pagination .page-item.active .page-link{
+  background:var(--text); border-color:var(--text); color:var(--bg);
+}
 
 /* ---- Poster / Card ---- */
 .poster{

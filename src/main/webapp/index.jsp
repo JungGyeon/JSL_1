@@ -59,7 +59,7 @@
 							<a class="anime-card"
 								href="${pageContext.request.contextPath}/anime/detail.do?animeId=${anime.animeId}">
 								<div class="poster"
-									style="background-image:url('${anime.thumbnail}'); background-size:cover; background-position:center;">
+									style="background-image:url('${anime.picture}'); background-size:cover; background-position:center;">
 									<span class="mono"
 										style="position: absolute; top: .5rem; left: .5rem; background: rgba(20,17,31,.75); color: var(--accent-2); font-size: .72rem; font-weight: 600; padding: .15rem .5rem; border-radius: 6px;">${status.index + 1}位</span>
 									<span class="score-badge">★ ${anime.score}</span>

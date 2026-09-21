@@ -23,8 +23,7 @@
 
 	<%@ include file="/common/header.jsp"%>
 
-	<section class="section container req-anchor" style="max-width: 480px;">
-		<span class="req-id">USER-001 · USER-002 · USER-003 · USER-004</span>
+	<section class="section container" style="max-width: 480px;">
 		<div class="surface p-4 p-md-5">
 			<h3 class="text-center mb-1">会員登録</h3>
 			<p class="text-muted text-center mb-4 small">いくつかの情報を入力するだけで、すぐに始められます</p>

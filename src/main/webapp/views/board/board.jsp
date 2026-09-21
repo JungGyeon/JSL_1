@@ -129,20 +129,34 @@ request.setAttribute("activePage", "board");
     margin: 0;
 }
 
-.board-search select {
+.board-search select,
+.board-search input {
     width: 100px;
     height: 36px;
     padding: 4px 8px;
     font-size: 14px;
     border-radius: 4px;
+    background: var(--surface-2);
+    color: var(--text);
+    border: 1px solid var(--border);
 }
 
 .board-search input {
     width: 220px;
-    height: 36px;
     padding: 4px 10px;
-    font-size: 14px;
-    border-radius: 4px;
+}
+
+.board-search select:focus,
+.board-search input:focus {
+    background: var(--surface-2);
+    color: var(--text);
+    border-color: var(--accent-2-deep);
+    box-shadow: 0 0 0 .2rem rgba(110, 231, 216, .12);
+    outline: none;
+}
+
+.board-search input::placeholder {
+    color: var(--text-muted);
 }
 
 .board-search button {
@@ -254,9 +268,7 @@ request.setAttribute("activePage", "board");
 
 </section>
 
-<section class="section container req-anchor board-section">
-
-    <span class="req-id">BOARD-001~</span>
+<section class="section container board-section">
 
     <div class="d-flex justify-content-between align-items-center mb-3">
 
@@ -328,7 +340,7 @@ request.setAttribute("activePage", "board");
 
                 <button
                     type="submit"
-                    class="btn btn-outline-secondary">
+                    class="btn btn-outline-soft">
                     検索
                 </button>
 
