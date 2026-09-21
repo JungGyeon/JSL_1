@@ -54,22 +54,11 @@ Light / Darkモードに対応し、好みに合わせて画面テーマを選�
 
 <br>
 
-## 🖥️ Screenshots
+## 🎥 Demo
 
-### Main
-<!-- メイン画面画像 -->
+ANIVERSEの主な機能を動画で紹介します。
 
-### Anime Search
-<!-- 検索画面画像 -->
-
-### Anime Detail
-<!-- 詳細画面画像 -->
-
-### Recommendation
-<!-- おすすめ画面画像 -->
-
-### Favorite
-<!-- お気に入り画面画像 -->
+[![ANIVERSE Demo](https://img.youtube.com/vi/JTKi8fH5a6U/maxresdefault.jpg)](https://youtu.be/JTKi8fH5a6U)
 
 <br>
 
