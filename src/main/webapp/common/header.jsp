@@ -1,15 +1,14 @@
-<%@ page language="java"
-    contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <%
-    String activePage = (String) request.getAttribute("activePage");
+String activePage = (String) request.getAttribute("activePage");
 
-    if (activePage == null) {
-        activePage = "";
-    }
+if (activePage == null) {
+	activePage = "";
+}
 %>
 
 <script>
@@ -66,8 +65,12 @@
 					class="nav-link nav-link-custom <%="recommend".equals(activePage) ? "active" : ""%>"
 					href="${pageContext.request.contextPath}/recommend/list.do">おすすめ</a></li>
 				<li class="nav-item"><a
+					class="nav-link nav-link-custom <%="board".equals(activePage) ? "active" : ""%>"
+					href="${pageContext.request.contextPath}/board/list.do">掲示板</a></li>
+				<li class="nav-item"><a
 					class="nav-link nav-link-custom <%="mypage".equals(activePage) ? "active" : ""%>"
 					href="${pageContext.request.contextPath}/favorite/list.do?userId=${sessionScope.userid}">マイページ</a></li>
+
 			</ul>
 		</div>
 
